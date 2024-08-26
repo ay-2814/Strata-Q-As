@@ -1,0 +1,92 @@
+Problem Statement
+--------------------------
+
+You have been asked to get a list of all the sign up IDs with transaction start dates in either April or May.
+
+
+Since a sign up ID can be used for multiple transactions only output the unique ID.
+
+
+Your output should contain a list of non duplicated sign-up IDs.
+
+Table: transactions
+
+Sample Data: 
+transaction_id	signup_id	transaction_start_date	amt
+1	100	2020-04-30	24.9
+2	101	2020-04-16	24.9
+3	102	2020-04-28	9.9
+4	102	2020-05-28	9.9
+5	102	2020-06-27	9.9
+
+---------------------------
+
+Python Script, Try 1
+--------------------------
+# Import your libraries
+import pandas as pd
+
+# Start writing code
+# transactions.head()
+
+# Get datatype info using .info()
+# transactions.info()
+
+# Column that has only months extracted from date column
+transactions['month'] = transactions['transaction_start_date'].dt.month
+
+# transactions.head()
+
+# filter transactions for April or May
+# transactions = transactions[(transactions['month']==4) | (transactions['month']==5)]
+# Can also do the multiple selection using isin
+transactions = transactions[transactions['month'].isin([4,5])]
+
+# transactions.head()
+
+# Taking only the unique signup_id from this df
+transactions = transactions['signup_id'].unique()
+
+------------------------
+Python Script, Try 2
+
+# Import your libraries
+import pandas as pd
+
+# Start writing code
+transactions.head()
+
+# Get the datatypes of columns using df.info()
+# transactions.info() # The start_date column is of type datetime64[ns]
+
+# For safe measure, converting the start_date column to datetime
+transactions['transaction_start_date'] = pd.to_datetime(transactions['transaction_start_date'])
+
+
+# transactions.head()
+
+# Extract the months from the start_date column
+transactions['month'] = transactions['transaction_start_date'].dt.month
+
+transactions.head()
+
+# Filter the records for months of April or May
+transactions = transactions[transactions['month'].isin([4,5])] # Boolean indexing to filter
+
+# Checking the unique months in the filtered dataset
+# transactions['month'].unique()
+
+# Getting the unique IDs
+transactions = transactions['signup_id'].unique()
+
+
+
+-------------------------
+SQL Query
+------------------------
+select * from transactions limit 5;
+
+
+SELECT distinct(signup_id)
+FROM transactions 
+WHERE (EXTRACT (MONTH FROM transaction_start_date) IN (4,5))
