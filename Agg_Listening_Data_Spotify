@@ -1,0 +1,14 @@
+# Import your libraries
+import pandas as pd
+
+# Start writing code
+listening_habits.head()
+
+# Grouping by user
+listening_habits = listening_habits.groupby("user_id").agg({"listen_duration":"sum", "song_id":"nunique"}).reset_index()
+
+# Converting minutes to seconds
+listening_habits["listen_duration"] = round(listening_habits["listen_duration"]/60)
+
+
+listening_habits
