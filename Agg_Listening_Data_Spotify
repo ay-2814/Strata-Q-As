@@ -1,3 +1,5 @@
+Python script
+--------------------------
 # Import your libraries
 import pandas as pd
 
@@ -12,3 +14,18 @@ listening_habits["listen_duration"] = round(listening_habits["listen_duration"]/
 
 
 listening_habits
+
+
+-------------------------
+
+SQL Query
+-------------------------
+select * from listening_habits limit 5;
+
+
+select user_id, round(sum(listen_duration)/60) AS "total_listen_duration", 
+count(distinct(song_id)) AS "unique_song_count"
+FROM listening_habits
+GROUP BY user_id
+
+-------------------------
