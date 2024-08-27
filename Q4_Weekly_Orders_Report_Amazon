@@ -1,0 +1,89 @@
+Problem Statement
+---------------------
+For each week, find the total number of orders. Include only the orders that are from the first quarter of 2023.
+
+
+The output should contain 'week' and 'quantity'.
+
+DataFrame: orders_analysis
+
+Sample Data:
+stage_of_order	week	             quantity
+received	2023-01-02 00:00:00	100
+shipped	        2023-01-02 00:00:00	101
+ordered	        2023-01-02 00:00:00	102
+received	2023-01-09 00:00:00	103
+shipped	        2023-01-09 00:00:00	104
+
+-------------------------
+Python Script - Try 1
+-------------------------
+# Import your libraries
+import pandas as pd
+
+# Start writing code
+orders_analysis.head()
+orders_analysis.shape
+
+#Checking data type of each column
+#orders_analysis.info()
+
+#Filtering orders for only Q1 of 2023
+orders_analysis = orders_analysis[orders_analysis['week'] < '2023-04-01']
+orders_analysis.shape
+
+#Grouping by week
+orders_analysis = orders_analysis.groupby('week').agg({"quantity":"sum"}).reset_index()
+
+orders_analysis
+
+-----------------------
+Python Script - Try 2
+-----------------------
+# Import your libraries
+import pandas as pd
+
+# Start code
+orders_analysis.head()
+
+# get the datatypes of the columns in dataframe
+#orders_analysis.info() # week is datetime
+
+# Convert week to datetime for safe measure
+orders_analysis['week'] = pd.to_datetime(orders_analysis['week'])
+
+# Extracting week from month
+# orders_analysis['week_extracted'] = orders_analysis['week'].dt.week
+# The above is not needed as we don't need to extract week no, but need to group by actual weeks
+
+# But we can create two further columns to store year and quaters using dt.year and dt.quarter
+orders_analysis['quarter'] = orders_analysis['week'].dt.quarter
+orders_analysis['year'] = orders_analysis['week'].dt.year
+
+# Checking the unique quarters and year extracted
+orders_analysis.quarter.unique()
+orders_analysis.year.unique()
+
+
+# Then filter the dataframe for orders from first quarter
+orders_analysis = orders_analysis[(orders_analysis['year'] == 2023) & (orders_analysis['quarter'] == 1)]
+
+# Getting the total number of orders for the filtered weeks using df.groupby
+# orders_analysis = orders_analysis.groupby('week').agg({'quantity':'sum'}).reset_index()
+
+# Using groupby with direct column access
+orders_analysis = orders_analysis.groupby('week').quantity.sum().reset_index()
+
+---------------------------------------------------------------------------------
+
+SQL Query
+------------------
+select * from orders_analysis limit 5;
+
+
+SELECT week, sum(quantity)
+FROM orders_analysis 
+WHERE (EXTRACT (YEAR FROM week) = 2023) AND (EXTRACT (QUARTER FROM week) = 1)
+GROUP BY week
+
+
