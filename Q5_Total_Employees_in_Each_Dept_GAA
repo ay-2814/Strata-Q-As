@@ -1,0 +1,46 @@
+Problem Statement
+----------------------
+Find the number of employees in each department.
+
+
+Output the department name along with the corresponding number of employees.
+
+DataFrame: worker
+
+Sample Data: 
+--------------------
+worker_id	first_name	last_name	salary	joining_date	department
+1		Monika		Arora		100000	2014-02-20 00:00:00	HR
+2		Niharika	Verma		80000	2014-06-11 00:00:00	Admin
+3		Vishal		Singhal		300000	2014-02-20 00:00:00	HR
+4		Amitah		Singh		500000	2014-02-20 00:00:00	Admin
+5		Vivek		Bhati		500000	2014-06-11 00:00:00	Admin
+	
+
+
+Python Script
+-------------------
+
+# Import necessary libraries
+import pandas as pd
+
+# Start coding
+worker.head()
+
+# Grouping by department name, summing employees and resetting index to get department name
+worker = worker.groupby('department').agg({"worker_id":"nunique"}).reset_index()
+
+# Rename column from worker_id to something more sensible
+worker = worker.rename(columns = {"worker_id":"num_workers"})
+
+---------------------
+
+SQL Query
+--------------------
+
+select * from worker limit 5;
+
+
+SELECT department, COUNT(distinct(worker_id)) AS num_workers
+FROM worker
+GROUP BY department;
