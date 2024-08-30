@@ -1,0 +1,118 @@
+Problem Statement
+--------------------
+Write a query that returns the user ID of all users that have created at least one ‘Refinance’ submission and at least one ‘InSchool’ submission.
+
+DataFrame: loans
+
+Sample Data:
+-------------
+id	user_id	created_at		status				type
+1	100	2017-04-21 00:00:00	prequal_completd_offer		Refinance
+2	100	2017-04-27 00:00:00	offer_accepted			Refinance
+3	101	2017-04-22 00:00:00	prequal_completd_no_offer	Refinance
+4	101	2017-04-23 00:00:00	offer_accepted			Refinance
+5	101	2017-04-25 00:00:00	offer_accepted			Personal
+
+
+Python Script - Try 1 
+-----------------------
+# Import your libraries
+import pandas as pd
+
+# Start writing code
+loans.head()
+
+refinance_users = loans[loans['type']=="Refinance"]['user_id'].unique()
+inSchool_users = loans[loans['type'] == "InSchool"]['user_id'].unique()
+
+common_users = set(refinance_users).intersection(set(inSchool_users))
+
+#print(common_users)
+common_users  = list(common_users)
+
+common_users_df = pd.DataFrame(data = common_users)
+#print(common_users_df)
+
+------------------------------------------------------------------------------
+
+Python script - Try 2 (Aug 30)
+--------------------------------
+# Import your libraries
+import pandas as pd
+
+# Start writing code
+loans.head()
+# print(loans.dtypes)
+
+# Grouping by user_id and taking the type column
+# loans = loans.groupby('user_id')['type']
+# Output for the above code is:
+# "index":{"0":0,"1":1,"2":2,"3":3,"4":4},"0":{"0":100,"1":101,"2":102,"3":107,"4":108},"1":{"0":{"0":"Refinance","1":"Refinance","10":"Refinance"},"1":{"2":"Refinance","3":"Refinance","4":"Personal"},"2":{"5":"InSchool"},"3":{"6":"Personal"},"4":{"7":"Refinance","8":"Refinance","9":"InSchool"}}} #
+# Reason for this is that the above is still a groupby object, unless aggregation is applied to it
+
+#checking datatype of the loans object created
+# print(loans)
+# print(loans.dtype)
+# The output for above is:
+# user_id
+# 100    object
+# 101    object
+# 102    object
+# 107    object
+# 108    object
+# Name: type, dtype: object
+
+# Getting back to exploring the solution suggested by ChatGPT
+loans = loans.groupby('user_id')['type'].apply(lambda x: set(x))
+
+# print(loans)
+
+# Filter user_ids which have both 'Refinance' and 'InSchool' using list comprehension
+loans = [user_id for user_id, types in loans.items() if 'Refinance' in types and 'InSchool' in types]
+
+# print(loans)
+
+
+----------------------------------------------------------------------------------------------------------
+
+SQL Query 
+---------
+--select * from loans limit 5;
+
+
+-- with t AS (
+-- SELECT distinct(type)
+-- FROM loans
+-- WHERE type = 'Refinance' OR type = 'InSchool'
+-- ), r AS(
+-- SELECT user_id
+-- FROM loans l INNER JOIN t USING (type)
+-- WHERE type = 'Refinance'
+-- ), i AS (
+-- SELECT user_id
+-- FROM loans l INNER JOIN t USING (type)
+-- WHERE type = 'InSchool'
+-- )
+-- SELECT distinct(user_id)
+-- FROM r INNER JOIN i USING (user_id)
+
+
+--ChatGPT solution
+-- The use of EXISTS is typically more efficient than other types of subqueries that might return large amounts of data, because EXISTS stops evaluating as soon as it finds a true condition—i.e., as soon as it finds at least one row that meets the criteria, it doesn't look for more.
+
+-- SELECT 1: This is a common pattern in EXISTS subqueries. Since EXISTS only cares about whether at least one row meets the condition, it doesn’t matter what is selected in the subquery. SELECT 1 is just a simple way to use minimal resources while checking for the existence of qualifying rows.
+
+SELECT DISTINCT user_id
+FROM loans l1
+WHERE EXISTS (
+    SELECT 1
+    FROM loans l2
+    WHERE l1.user_id = l2.user_id
+    AND l2.type = 'Refinance'.      
+) AND EXISTS (
+    SELECT 1
+    FROM loans l3
+    WHERE l1.user_id = l3.user_id
+    AND l3.type = 'InSchool'
+);
+
