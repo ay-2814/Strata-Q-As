@@ -1,0 +1,60 @@
+Problem Statement
+--------------------
+Find the complaint id for the processed complaints of type 1.
+
+DataFrame: facebook_complaints
+Expected Output Type: pandas.DataFrame
+
+Sample Data
+------------------
+complaint_id	type	processed
+0		0	TRUE
+1		0	TRUE
+2		0	FALSE
+3		1	TRUE
+4		1	TRUE
+
+----------------------------------
+
+Python Script - Try 1:
+-----------------------
+# Import your libraries
+import pandas as pd
+
+# Start writing code
+#facebook_complaints.head()
+#facebook_complaints.info()
+FCdf = facebook_complaints
+FCdf.head()
+#FCdf.shape
+
+FCdf = facebook_complaints[(facebook_complaints['type']==1) & (facebook_complaints['processed'])].complaint_id
+---------------------------------------------------------------------------------------------------------------
+
+Python Script - Try 2 (Aug 30th)
+----------------------------------
+# Import your libraries
+import pandas as pd
+
+# Start writing code
+facebook_complaints.head()
+# facebook_complaints.info()
+
+# Filter for processed complaints
+facebook_complaints = facebook_complaints[facebook_complaints["processed"]]
+
+# Filter for type as 1
+facebook_complaints = facebook_complaints[facebook_complaints["type"] == 1]
+
+# Selecting only the complaint_id column
+facebook_complaints["complaint_id"]
+
+------------------------------------------------------------------------------------
+
+SQL Query
+----------
+select * from facebook_complaints limit 5;
+
+SELECT complaint_id
+FROM facebook_complaints
+WHERE type = 1 AND processed = 'TRUE'
