@@ -1,0 +1,62 @@
+Problem Statement
+------------------
+Write a query that returns binary description of rate type per loan_id. The results should have one row per loan_id and two columns: for fixed and variable type.
+DataFrame: submissions
+Expected Output Type: pandas.DataFrame
+
+Sample Data:
+-------------
+id	balance	interest_rate	rate_type	loan_id
+1	5229.12		8.75	variable	2
+2	12727.52	11.37	fixed		4
+3	14996.58	8.25	fixed		9
+4	21149		4.75	variable	7
+5	14379		3.75	variable	5
+
+
+Python Script  - Try 1
+-----------------------
+# Import your libraries
+import pandas as pd
+
+# Start writing code
+submissions.head()
+
+submissions['fixed'] = submissions['rate_type']=="fixed"
+submissions['fixed'] = submissions['fixed'].astype(int)
+submissions['variable'] = submissions['rate_type']== "variable"
+submissions['variable'] = submissions['variable'].astype(int)
+
+submissions = submissions[['loan_id','fixed', 'variable']]
+
+
+Python Script - Try 2 (Aug 31)
+-------------------------------
+# Import your libraries
+import pandas as pd
+
+# Start writing code
+submissions.head()
+
+submissions['IsVariable'] = submissions['rate_type'].apply(lambda x: 1 if x == 'fixed' else 0)
+
+submissions['IsFixed'] = submissions['rate_type'].apply(lambda x : 1 if x == 'variable' else 0)
+
+submissions = submissions[{'loan_id','IsVariable','IsFixed'}]
+
+SQL Script
+-----------
+--select * from submissions limit 5;
+
+SELECT loan_id, 
+        count(CASE
+                WHEN (rate_type = 'fixed') THEN id
+                ELSE NULL
+            END) AS "IsFixed",
+        count(CASE
+                WHEN (rate_type = 'variable') THEN id
+                ELSE NULL
+            END) AS "IsVariable"
+FROM submissions
+GROUP BY loan_id
+
