@@ -1,0 +1,149 @@
+Problem Statement
+-----------------
+You have access to Facebook's database which includes several tables relevant to user interactions. For this task, you are particularly interested in tables that store data about user posts, friendships, and likes. Calculate the total number of likes made on friend posts on Friday.
+
+
+The output should contain two different columns 'likes' and 'date'.
+
+DataFrames: user_posts, friendships, likes
+
+Sample Data
+-----------------
+User Posts 
+-------------
+    post_id user_name date_posted
+0        1     Alice  2024-01-16
+1        2     Fiona  2024-01-18
+2        3    Hannah  2024-01-09
+3        4       Eve  2023-12-27
+4        5     Fiona  2024-01-15
+
+friendships 
+-------------
+   user_name1 user_name2
+0      David      Fiona
+1    Charlie     Hannah
+2        Bob     George
+3     George      Alice
+4        Eve        Ian
+
+likes 
+-------------
+   user_name  post_id date_liked
+0    George        7 2023-12-31
+1     Alice       39 2024-01-13
+2     David        6 2024-01-22
+3       Bob       21 2024-01-08
+4   Charlie       21 2024-01-04
+
+Python Script
+----------------
+# Import your libraries
+import pandas as pd
+
+# Start writing code
+# print("\nUser Posts \n-------------\n", user_posts.head())
+# print("\nfriendships \n-------------\n", friendships.head())
+# print("\nlikes \n-------------\n", likes.head(),"\n")
+
+# Checking data types of all the columns of the dfs in use
+# print("Data types:\n")
+# print("\n",user_posts.info(),"\n", friendships.info(), "\n", likes.info())
+
+
+# Converting the date_liked into datetime
+likes['date_liked'] = pd.to_datetime(likes['date_liked'])
+likes.head()
+
+# Creating a column of day_of_week 
+likes['Day'] = likes['date_liked'].dt.dayofweek
+
+likes.Day.unique() # This tells that Friday is 4
+
+# Filter all the likes that fall on a Friday
+likes_friday = likes[likes['Day'] == 4]
+
+# merge user_posts with likes to get who liked each post
+post_likers = pd.merge(user_posts, likes_friday, how = 'inner', on = 'post_id', suffixes = ('_posted', '_liked_friday'))
+
+print("Shape of users df: ", user_posts.shape)
+print("Shape of likes_friday df: ", likes_friday.shape)
+print("Shape of post_likers: ", post_likers.shape)
+print(post_likers)
+
+friendships_swapped = friendships.rename(columns = {"user_name1":"user_name2", "user_name2":"user_name1"})
+
+
+
+print("Shape of friendships: ", friendships.shape)
+print("Shape of friendships_swapped: ", friendships_swapped.shape)
+
+all_friendships = pd.concat([friendships, friendships_swapped])
+print("Shape of all_friendships: ", all_friendships.shape)
+
+# merge post_likers df with all_friendships, on combination of user_name_posted. user_name_liked with user_name1, user_name2 from all_friendships
+
+merged_df = pd.merge(post_likers, all_friendships, left_on=["user_name_posted","user_name_liked_friday"], right_on=["user_name1", "user_name2"])
+
+print("Shape of merged_df is: ", merged_df.shape)
+
+print(merged_df.columns)
+
+# Counting number of likes and selecting the relevant columns
+merged_df = merged_df.groupby("date_liked").size().reset_index()
+
+
+
+SQL Query
+----------------
+select * from user_posts;
+
+select * from friendships
+ORDER BY user_name1;
+
+-- select * from friendships limit 5;
+-- select * from user_posts limit 5;
+
+-- select * from likes limit 5;
+
+with friday_likes AS (
+    SELECT user_name AS "post_liked_by", post_id, date_liked
+    FROM likes 
+    WHERE EXTRACT(DOW from date_liked) = 5
+),
+user_posts_liked AS (
+    SELECT u.post_id, user_name, post_liked_by, date_liked 
+    FROM user_posts u
+    INNER JOIN friday_likes USING (post_id)
+), 
+friendships_no_dup AS (
+    SELECT distinct user_name1, user_name2
+    FROM friendships
+),
+bidirectional_friendship AS (
+SELECT user_name1, user_name2
+FROM friendships_no_dup
+UNION ALL
+SELECT user_name2, user_name1
+FROM friendships_no_dup
+),
+bidirectional_friendship_no_union_all AS (
+    SELECT user_name1, user_name2
+    FROM friendships_no_dup
+    UNION
+    SELECT user_name2, user_name1
+    FROM friendships_no_dup
+),
+user_like_friendshp_joined AS (
+    SELECT post_id, date_liked
+    FROM user_posts_liked t1
+    INNER JOIN bidirectional_friendship_no_union_all t2
+    ON t1.user_name = t2.user_name1 AND t1.post_liked_by = t2.user_name2 
+)
+--SELECT count(*) FROM bidirectional_friendship_no_union_all
+--SELECT count(*) FROM bidirectional_friendship
+SELECT date_liked, count(*) AS "NumberOfLikes" 
+FROM  user_like_friendshp_joined
+GROUP BY date_liked
+ORDER BY date_liked;
+
