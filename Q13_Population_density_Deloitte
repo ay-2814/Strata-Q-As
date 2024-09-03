@@ -1,0 +1,67 @@
+Problem Statement
+-------------------
+You are working on a data analysis project at Deloitte where you need to analyze a dataset containing information
+about various cities. Your task is to calculate the population density of these cities, rounded to the nearest integer, and identify the cities with the minimum and maximum densities.
+The population density should be calculated as (Population / Area).
+
+
+The output should contain 'city', 'country', 'density'.
+
+Table: cities_population
+
+Sample Data:
+-------------
+city		country		population	area
+Metropolis	Countryland	1000000		500
+Smallville	Countryland	50000		1000
+Coastcity	Oceanland	300000		0
+Starcity	Mountainous	600000		600
+Gotham		Islander	1500000		300
+
+
+
+Python Script
+---------------
+# Import your libraries
+import pandas as pd
+
+# Start writing code
+cities_population.head()
+
+
+cities_population['city_density'] = cities_population['population']/cities_population['area']
+
+# Keeping only non-zero values and convert and rounding to nearest integer
+cities_population = cities_population[cities_population['city_density'].notnull()]
+cities_population['city_density'] = cities_population['city_density'].round(0)
+
+max_density = cities_population[cities_population['city_density'] == cities_population['city_density'].max()][['city','country','city_density']]
+
+min_density = cities_population[cities_population['city_density'] == cities_population['city_density'].min()][['city','country','city_density']]
+
+min_max_city_density = pd.concat([max_density, min_density])
+
+
+SQL Query
+--------------
+with density AS(
+    SELECT city, country, ROUND((population)/NULLIF(area, 0)) AS "city_density"
+    FROM cities_population
+    WHERE area > 0
+),
+max_density AS (
+    select city, country, city_density
+    FROM density
+    WHERE city_density = (SELECT max(city_density) FROM density)
+),
+min_density AS (
+    select city, country, city_density
+    FROM density
+    WHERE city_density = (SELECT min(city_density) FROM density)
+)
+SELECT * 
+FROM max_density
+UNION ALL
+SELECT *
+FROM min_density
+
