@@ -1,0 +1,58 @@
+Problem Statement
+------------------
+# Import your libraries
+import pandas as pd
+
+# Start writing code
+customer_feedback.head()
+
+# getting the distict/unique type pf comment_category and source_channels
+# print(customer_feedback.source_channel.unique())
+# print(customer_feedback['comment_category'].unique())
+
+# filter the required category and source
+customer_feedback = customer_feedback[customer_feedback['comment_category'] != 'short_comments']
+
+# Further filtering to get only social media comments and taking the necessaswry columns AND remvoe duplicates
+customer_feedback = customer_feedback[customer_feedback['source_channel'] == 'social_media'][['feedback_id', 'feedback_text', 'source_channel','comment_category']].drop_duplicates()
+
+Sample Data:
+-----------------
+feedback_id	feedback_text								source_channel	comment_category
+1		Great service, but the app crashes occasionally.			email		mid_length_comments
+2		Loved the friendly staff and quick response. Highly recommended.	survey		mid_length_comments
+3		Difficult to navigate the website, and customer support is slow.	email		mid_length_comments
+4		Fantastic experience with the new update!				email		mid_length_comments
+5		The app is good, but it lacks some features.				email		mid_length_comments
+
+Python Script
+----------------
+# Import your libraries
+import pandas as pd
+
+# Start writing code
+customer_feedback.head()
+
+# getting the distict/unique type pf comment_category and source_channels
+# print(customer_feedback.source_channel.unique())
+# print(customer_feedback['comment_category'].unique())
+
+# filter the required category and source
+customer_feedback = customer_feedback[customer_feedback['comment_category'] != 'short_comments']
+
+# Further filtering to get only social media comments and taking the necessaswry columns AND remvoe duplicates
+customer_feedback = customer_feedback[customer_feedback['source_channel'] == 'social_media'][['feedback_id', 'feedback_text', 'source_channel','comment_category']].drop_duplicates()
+
+
+SQL Script
+----------------
+select * from customer_feedback limit 5;
+
+select distinct comment_category from customer_feedback;
+
+
+
+SELECT distinct feedback_id, feedback_text, source_channel, comment_category
+FROM customer_feedback
+WHERE source_channel = 'social_media'
+AND comment_category <> 'short_comments'
