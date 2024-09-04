@@ -1,0 +1,88 @@
+Problem Statement
+------------------
+You are analyzing a social network dataset at Google. Your task is to find mutual friends between two users, Karl and Hans. There is only one user named Karl and one named Hans in the dataset.
+
+
+The output should contain 'user_id' and 'user_name' columns.
+
+DataFrames: users, friends
+
+Sample Data:
+-------------
+users:
+  user_id user_name
+0        1      Karl
+1        2      Hans
+2        3      Emma
+3        4      Emma
+4        5      Mike
+
+friends:
+   user_id  friend_id
+0        1          3
+1        1          5
+2        2          3
+3        2          4
+4        3          1
+
+Python - Join Approach:
+-----------------------
+# Import your libraries
+import pandas as pd
+
+# Start writing code
+# print(users.head())
+# print(friends.head())
+
+# filter for user_name Karl and Hans
+user_karl = users[users['user_name']=='Karl']
+user_hans = users[users['user_name']=='Hans']
+
+# Find all friends of Karl
+Karl_friends = pd.merge(user_karl, friends, on = 'user_id')['friend_id']
+Hans_friends = pd.merge(user_hans, friends, on = 'user_id')['friend_id']
+
+
+mutual_friend = list(set(Karl_friends).intersection(set(Hans_friends)))
+
+mutual_friend = pd.DataFrame(mutual_friend, columns = ['m_f_id'])
+
+mutual_friend = pd.merge(users, mutual_friend, left_on = 'user_id', right_on = 'm_f_id')[['user_id', 'user_name']]
+
+Python - Set approach
+-----------------------
+# Import your libraries
+import pandas as pd
+
+# Start writing code
+users.head()
+# print(users)
+friends.head()
+-----------------
+# Find the user iDS for Karl and Hans
+
+karl_id = users[users['user_name'] == 'Karl']['user_id'].iloc[0]
+hans_id = users[users['user_name'] == 'Hans']['user_id'].iloc[0]
+
+karl_friends = friends[friends['user_id'] == karl_id]['friend_id']
+hans_friends = friends[friends['user_id'] == hans_id]['friend_id']
+
+mutual_friends = list(set(karl_friends).intersection(set(hans_friends)))
+
+mutual_friends_df = users[users['user_id'].isin(mutual_friends)]
+
+--------------------------
+
+SQL Query
+-----------
+select * from users;
+
+
+SELECT * FROM users
+WHERE user_id = (SELECT distinct friend_id
+FROM users INNER JOIN friends USING (user_id)
+WHERE user_name = 'Karl'
+INTERSECT
+SELECT distinct friend_id
+FROM users INNER JOIN friends USING (user_id)
+WHERE user_name = 'Hans')
