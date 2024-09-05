@@ -1,0 +1,59 @@
+Problem Statement: 
+-------------------
+You are given a dataset from Amazon that tracks and aggregates user activity on their platform in certain time periods. For each device type, find the time period with the highest number of active users.
+
+
+The output should contain 'user_count', 'time_period', and 'device_type', where 'time_period' is a concatenation of 'start_timestamp' and 'end_timestamp', like ; "start_timestamp to end_timestamp".
+
+DataFrame: user_activity
+
+
+Sample Data:
+-------------
+start_timestamp		end_timestamp		user_count	device_type	time_difference
+2024-01-25 03:32:00	2024-01-25 04:31:00	64		desktop		59
+2024-01-25 15:43:00	2024-01-25 16:40:00	71		desktop		57
+2024-01-25 02:32:00	2024-01-25 02:48:00	78		mobile		16
+2024-01-25 00:45:00	2024-01-25 02:21:00	23		mobile		96
+2024-01-25 16:30:00	2024-01-25 18:05:00	2		desktop		95
+
+
+Python Script:
+----------------
+# Import your libraries
+import pandas as pd
+
+# Start writing code
+user_activity.head()
+
+# Ensure the start and end timestamp are in date format
+user_activity['start_timestamp'] = pd.to_datetime(user_activity['start_timestamp'])
+user_activity['end_timestamp'] = pd.to_datetime(user_activity['end_timestamp'])
+
+user_activity['start_timestamp to end_timestamp'] = user_activity['start_timestamp'].dt.strftime('%Y-%m-%d %H:%M:%S') + ' to ' + user_activity['end_timestamp'].dt.strftime('%Y-%m-%d %H:%M:%S')
+
+# My approach
+# user_activity_grouped = user_activity.groupby(['device_type','start_timestamp to end_timestamp']).agg({'user_count':'sum'}).reset_index()
+# user_activity_grouped = user_activity.groupby('device_type')['user_count'].max().reset_index()
+
+# Solution approach
+
+user_activity_grouped = user_activity.groupby('device_type').apply(lambda x: x[x['user_count'] == x['user_count'].max()])[['user_count','start_timestamp to end_timestamp', 'device_type']]
+#user_activity_grouped_2 = user_activity.groupby('device_type').apply(lambda x: x[x['user_count'] == x['user_count'].max()])
+
+------------------------
+
+SQL Query:
+-----------
+select * from user_activity;
+
+with max_device_type AS (
+    SELECT device_type, max(user_count) as "max_user_count"
+    FROM user_activity
+    GROUP BY 1
+)
+SELECT a.*, start_timestamp || ' to ' || end_timestamp AS " time_period"
+FROM max_device_type a
+INNER JOIN user_activity b
+ON a.device_type = b.device_type AND a.max_user_count = b.user_count
+
