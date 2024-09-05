@@ -1,0 +1,58 @@
+Problem Statement
+-------------------
+You have been asked to find the job titles of the highest-paid employees.
+
+
+Your output should include the highest-paid title or multiple titles with the same salary.
+
+Sample Data:
+---------------
+worker
+
+worker_id first_name last_name  salary 	joining_date department
+1     	  Monika     Arora 	100000   2014-02-20         HR
+2  	  Niharika   Verma  	 80000   2014-06-11      Admin
+3     	  Vishal     Singhal 	 300000  2014-02-20         HR
+4    	  Amitah     Singh 	 500000  2014-02-20      Admin
+5     	  Vivek      Bhati 	 500000  2014-06-11      Admin
+
+title:
+   worker_ref_id   worker_title affected_from
+0              1        Manager    2016-02-20
+1              2      Executive    2016-06-11
+2              8      Executive    2016-06-11
+3              5        Manager    2016-06-11
+4              4  Asst. Manager    2016-06-11
+
+Python Script:
+----------------
+# Import your libraries
+import pandas as pd
+
+# Start writing code
+worker.head()
+title.head()
+
+# Filtering the employee with the highest salary
+highest_paid_worker = worker[worker['salary'] == worker['salary'].max()]['worker_id']
+
+# merging above with title to get their title
+highest_paid_title = pd.merge(highest_paid_worker, title, left_on = 'worker_id', right_on = 'worker_ref_id')[['worker_title']].rename(columns = {"worker_title":"best_paid_titles"})
+
+# Reference of the strata solution
+# max_salary = merged_df[merged_df["salary"] == merged_df["salary"].max()][["worker_title"]].rename(columns={"worker_title": "best_paid_title"})
+---------------------
+
+SQL Query:
+-------------
+select * from worker limit 5;
+select * from title limit 5;
+
+with highest_salary_id AS (
+    SELECT worker_id
+    FROM worker
+    WHERE salary = (SELECT max(salary) FROM worker))
+SELECT worker_title AS "highest_paid_title"
+FROM title t
+INNER JOIN highest_salary_id h 
+ON t.worker_ref_id = h.worker_id
