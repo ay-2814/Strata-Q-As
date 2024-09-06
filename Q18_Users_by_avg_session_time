@@ -1,0 +1,104 @@
+Problem Statement
+-----------------
+Calculate each user's average session time. A session is defined as the time difference between a page_load and page_exit. For simplicity, assume a user has only 1 session per day and if there are multiple of the same events on that day, consider only the latest page_load and earliest page_exit, with an obvious restriction that load time event should happen before exit time event . Output the user_id and their average session time.
+
+DataFrame: facebook_web_log
+Expected Output Type: pandas.DataFrame
+
+Python Script: 
+----------------
+# Import your libraries
+import pandas as pd
+
+# Start writing code
+# facebook_web_log.head()
+# facebook_web_log.info()
+facebook_web_log.shape
+
+# Ensure the timestamp is in datetime format
+facebook_web_log['timestamp'] = pd.to_datetime(facebook_web_log['timestamp'])
+# facebook_web_log[facebook_web_log['user_id'] == 2]
+
+
+
+# Create a date column from the timestamp
+facebook_web_log['date'] = facebook_web_log['timestamp'].dt.date
+
+
+# Filter the dataframe where the action is only page_exit or page_load
+facebook_web_log.action.unique()
+facebook_web_log_page_load = facebook_web_log[facebook_web_log['action'] == 'page_load']
+# facebook_web_log_page_load.head()
+facebook_web_log_page_exit = facebook_web_log[facebook_web_log['action'] == 'page_exit']
+# facebook_web_log_page_exit.head()
+
+
+# groupby on user_id and date, picking the time where page_load is latest and page_exit is earliest
+facebook_web_log_page_load = facebook_web_log_page_load.groupby(['user_id','date']).apply(lambda x: x[x['timestamp'] == x['timestamp'].max()]).reset_index(drop=True)
+
+facebook_web_log_page_exit = facebook_web_log_page_exit.groupby(['user_id','date']).apply(lambda x: x[x['timestamp'] == x['timestamp'].min()]).reset_index(drop=True)
+
+# merge the two dfs on user_id and date
+user_load_exit = pd.merge(facebook_web_log_page_load,facebook_web_log_page_exit, on = ['user_id','date'], suffixes = ('_load', '_exit'))
+
+# Filtering for user_id 2 to do some eye testing
+# facebook_web_log[facebook_web_log['user_id'] == 2]
+
+user_load_exit['session_time'] = user_load_exit['timestamp_exit'] - user_load_exit['timestamp_load']
+
+user_load_exit.head()
+
+# Getting rid of negative session times if any
+user_load_exit = user_load_exit[user_load_exit['session_time'].astype(int) > 0]
+
+# Calculating the avergae session time for each user
+user_load_exit_avg_time = user_load_exit.groupby('user_id').agg({'session_time':'mean'}).reset_index()
+
+-----------------
+
+
+SQL Query:
+---------
+select * from facebook_web_log limit 5;
+
+
+with load_table AS (
+    SELECT user_id, timestamp, action, DATE(timestamp) as "date"
+    FROM facebook_web_log
+    WHERE action = 'page_load'
+    ),
+exit_table AS (
+    SELECT user_id, timestamp, action, DATE(timestamp) as "date"
+    FROM facebook_web_log
+    WHERE action = 'page_exit'
+    ),
+user_by_day AS (
+    SELECT 
+        t1.user_id,
+        t1.timestamp AS load_timestamp,
+        t1.action AS load_action,
+        t1.date AS date,
+        t2.timestamp AS exit_timestamp,
+        t2.action AS exit_action
+    FROM load_table t1
+    INNER JOIN 
+    exit_table t2 ON 
+    t1.user_id = t2.user_id AND t1.date = t2.date
+    -- WHERE t1.user_id = t2.user_id AND t1.date = t2.date 
+    ),
+user_day_agg AS (
+ SELECT user_id, date, min(exit_timestamp) AS "exit_timestamp",  max(load_timestamp) AS "load_timestamp"
+ FROM user_by_day
+ GROUP BY 1,2
+ ),
+ user_session AS (
+    SELECT *, (exit_timestamp - load_timestamp) AS "session_length"
+    FROM user_day_agg
+    )
+SELECT user_id, AVG(session_length)
+FROM user_session
+GROUP BY 1;
+-- SELECT user_by_day.*, exit_timestamp - load_timestamp AS "session_time"
+--  FROM user_by_day
+--  WHERE EXTRACT(EPOCH FROM (exit_timestamp - load_timestamp)) > 0
+
