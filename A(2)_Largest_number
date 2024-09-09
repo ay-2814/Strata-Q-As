@@ -1,0 +1,23 @@
+Problem Statememt: 
+---------------------
+
+Find the largest number in an array.
+
+
+Solution
+---------
+def find_largest_number(arr):
+    """ 
+    :type arr: List[int] 
+    :rtype: int 
+    """
+    # Since its a list, its a sequence
+    # Thus, its iterable, subscriptable and we can find its length
+    largest = 0
+    for num in arr:
+        if num > largest:
+            largest = num
+    return largest
+    
+
+
