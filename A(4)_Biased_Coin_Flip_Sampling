@@ -1,0 +1,18 @@
+Problem Statement:
+-------------------
+Write a function that samples the flip of a biased coin for N times.
+
+Solution:
+----------
+import random
+
+random.seed(0)
+
+def biased_coin_flip(input):
+    p = input["probability"]
+    N = input["N"]
+    outcomes = [0,1]
+    probabilities = [p, 1-p]
+    if N > 0:
+        results = random.choices(outcomes, probabilities, k=N)
+    return results

@@ -1,0 +1,12 @@
+Problem Statement:
+-------------------
+Write a function to reverse a string.
+
+Solution:
+----------
+def reverse_string(string):
+    """ 
+    :type string: str
+    :rtype: str
+    """
+    return string[::-1]
