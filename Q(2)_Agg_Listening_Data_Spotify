@@ -1,0 +1,52 @@
+Problem Statement
+---------------------------
+
+You're tasked with analyzing a Spotify-like dataset that captures user listening habits.
+For each user, calculate the total listening time and the count of unique songs they've listened to. In the database duration values are displayed in seconds. Round the total listening duration to the nearest whole minute.
+
+
+The output should contain three columns: 'user_id', 'total_listen_duration', and 'unique_song_count'.
+
+Table: listening_habits
+
+Sample data
+
+user_id	song_id	listen_duration
+101	5001	240
+101	5002	0
+102	5001	300
+102	5003	0
+101	5001	240
+-------------------------
+
+Python script
+--------------------------
+# Import your libraries
+import pandas as pd
+
+# Start writing code
+listening_habits.head()
+
+# Grouping by user
+listening_habits = listening_habits.groupby("user_id").agg({"listen_duration":"sum", "song_id":"nunique"}).reset_index()
+
+# Converting minutes to seconds
+listening_habits["listen_duration"] = round(listening_habits["listen_duration"]/60)
+
+
+listening_habits
+
+
+-------------------------
+
+SQL Query
+-------------------------
+select * from listening_habits limit 5;
+
+
+select user_id, round(sum(listen_duration)/60) AS "total_listen_duration", 
+count(distinct(song_id)) AS "unique_song_count"
+FROM listening_habits
+GROUP BY user_id
+
+-------------------------
