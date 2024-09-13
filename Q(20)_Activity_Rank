@@ -1,0 +1,78 @@
+Problem Statement
+-----------------
+Find the email activity rank for each user. Email activity rank is defined by the total number of emails sent. The user with the highest number of emails sent will have a rank of 1, and so on. Output the user, total emails, and their activity rank. Order records by the total emails in descending order. Sort users with the same number of emails in alphabetical order.
+In your rankings, return a unique value (i.e., a unique rank) even if multiple users have the same number of emails. For tie breaker use alphabetical order of the user usernames.
+
+Table: google_gmail_emails
+
+
+Sample Data: 
+------------
+id	from_user		to_user			day
+0	6edf0be4b2267df1fa	75d295377a46f83236	10
+1	6edf0be4b2267df1fa	32ded68d89443e808	6
+2	6edf0be4b2267df1fa	55e60cfcc9dc49c17e	10
+3	6edf0be4b2267df1fa	e0e0defbb9ec47f6f7	6
+4	6edf0be4b2267df1fa	47be2887786891367e	1
+
+
+
+Python Script - Try 1
+-----------------------
+# Import your libraries
+import pandas as pd
+
+# Start writing code
+google_gmail_emails.head()
+
+# Creating a column to count all the emails sent by a user
+# google_gmail_emails = google_gmail_emails.groupby('from_user').agg({'to_user':'count'}).reset_index()
+ 
+# solution
+result = google_gmail_emails.groupby(['from_user']).size().to_frame('total_emails').reset_index()
+result['rank'] = result['total_emails'].rank(method = 'first', ascending = False)
+# result = result.sort_values(by = ['total_emails', 'from_user'], ascending = [Fals
+#e, True])
+
+result = result.sort_values(by = ['total_emails', 'from_user'], ascending = [False, True])
+
+
+
+
+Python Script - Try 2
+----------------------
+import pandas as pd
+
+google_gmail_emails.head()
+
+results = google_gmail_emails
+
+results = results.groupby('from_user').agg({"to_user":"count"}).to_frame('email_count').reset_index()
+
+
+SQL Query - Try 1:
+-------------------
+select * from google_gmail_emails limit 5;
+
+select count(distinct(from_user)) FROM google_gmail_emails;
+
+
+
+SELECT from_user, 
+count(*) AS "email_sent_count", 
+RANK() OVER ( ORDER BY count(*) desc, from_user asc) AS "RANK"
+FROM google_gmail_emails
+GROUP BY from_user
+ORDER BY "RANK
+
+
+
+--------------------------
+Learning topics: 
+Python
+- to_frame to convert series to pandas dataframe. 
+- rank, method = first
+- sort_values (by = [], ascending = [])
+
+SQL
+rank() OVER 
