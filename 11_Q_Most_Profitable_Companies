@@ -46,4 +46,10 @@ GROUP BY company
 ORDER BY sum(profits) DESC
 LIMIT 3;
 
+
+Learnings:
+------------
 --TOP n does not work on PostgreSQL
+
+Q11, nlargest, index slicing in python, Limit in PostgreSQL
+
