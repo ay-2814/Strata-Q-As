@@ -1,0 +1,80 @@
+Problem Statement:
+------------------
+Find the top 10 users that have traveled the greatest distance. Output their id, name and a total distance traveled.
+
+
+DataFrames: lyft_rides_log, lyft_users
+Expected Output Type: pandas.DataFrame
+
+Sample Data:
+-------------
+lyft_rides_log
+id	user_id	distance
+101	8	93
+102	40	56
+103	28	83
+104	33	83
+105	1	87
+
+lyft_users:
+----------
+id	name
+1	Dustin Smith
+2	Jay Ramirez
+3	Joseph Cooke
+4	Melinda Young
+5	Sean Parker
+
+Python Script:
+---------------
+
+# Import your libraries
+import pandas as pd
+
+# Start writing code
+lyft_rides_log.head()
+lyft_users.head()
+lyft_df = lyft_rides_log
+
+type(lyft_df)
+len(lyft_df)
+lyft_df.id.nunique()
+
+
+# Taking total distance of user_ids by grouping
+# lyft_df = lyft_df.groupby('user_id').distance.sum().reset_index()
+lyft_df = lyft_df.groupby('user_id').agg({'distance':'sum'}).reset_index()
+
+lyft_df = lyft_df.nlargest(10, 'distance').sort_values(by = 'distance', ascending = False)
+# lyft_df = lyft_df.groupby(['user_id']).agg({'distance':'sum'}).to_frame()
+
+# Merging the distance df with users to get name
+
+lyft_merged = pd.merge(lyft_df, lyft_users, how = 'inner', left_on = 'user_id', right_on = 'id')[['user_id', 'name', 'distance']]
+
+--------------------------------
+SQL Query
+----------
+select * from lyft_rides_log limit 5;
+select * from lyft_users limit 5;
+
+SELECT user_id, name, total_distance FROM (
+SELECT user_id, SUM(distance) as "total_distance",
+rank() OVER(ORDER BY sum(distance) desc) as "user_rank"
+FROM lyft_rides_log
+GROUP BY user_id) d
+INNER JOIN lyft_users u
+ON d.user_id = u.id
+WHERE user_rank <=10
+ORDER BY total_distance desc
+
+
+Learnings:
+-----------
+Python: 
+nlargest(n, 'column_name')
+pd.merge
+
+SQL:
+HAVING does not work with WINDOW functions because window functions get executed after groupby and having!
+Subqueries
