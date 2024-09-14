@@ -1,0 +1,63 @@
+Problem Statement:
+------------------
+Write a query that returns the rate_type, loan_id, loan balance , and a column that shows with what percentage the loan's balance contributes to the total balance among the loans of the same rate type.
+
+DataFrame: submissions
+Expected Output Type: pandas.DataFrame
+
+Sample Data:
+------------
+id	balance		interest_rate	rate_type	loan_id
+1	5229.12		8.75		variable	2
+2	12727.52	11.37		fixed		4
+3	14996.58	8.25		fixed		9
+4	21149		4.75		variable	7
+5	14379		3.75		variable	5
+
+
+
+Python Script: 
+---------------
+# Import your libraries
+import pandas as pd
+
+# Start writing code
+submissions.head()
+# print(submissions)
+
+# Approach 1
+results = submissions.groupby('rate_type')['balance'].sum().reset_index().rename(columns = {'balance':'total_balance'})
+
+results = pd.merge(results, submissions, on = 'rate_type')
+results['balance_share'] = results['balance']/ results['total_balance'] *100
+results = results[['loan_id', 'rate_type','balance','balance_share']]
+
+# Approach 2
+# Create a column for cumsum and use it for calculating the contribution of loan's line item to total balance (cum sum percentage)
+
+# submissions['type_sum'] = submissions.groupby(['rate_type']).agg({'balance':'sum'})
+# submissions
+# submissions['balance_share'] = (submissions['balance']/submissions['type_sum'])*100
+
+# submissions = submissions[['rate_type','loan_id','balance','balance_share']]
+
+--------------------------------
+
+SQL Query:
+---------
+select * from submissions limit 5;
+
+
+-- Window function over rate_type
+
+SELECT rate_type, loan_id, balance, (balance/type_sum)*100 AS "loan_share"
+FROM (SELECT *, SUM(balance) OVER(PARTITION BY rate_type) AS "type_sum"
+        FROM submissions) temp ;
+
+
+--------------------------
+
+Learnings:
+---------
+Window function in SQL
+Python, merging a grouped by dataframe with its original dataframe to get the total of a rate type in the same row as the indiviudal row item. 
