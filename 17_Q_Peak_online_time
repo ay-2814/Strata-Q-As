@@ -57,3 +57,9 @@ FROM max_device_type a
 INNER JOIN user_activity b
 ON a.device_type = b.device_type AND a.max_user_count = b.user_count
 
+
+Learnings:
+----------
+Python: apply lambda after groupby and then boolean indexing.
+ SQL: CTEs and concat using ||
+

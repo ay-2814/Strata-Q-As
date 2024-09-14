@@ -74,3 +74,7 @@ SELECT distinct flight_id, movie_id, duration
 FROM flight_movie_cross
 WHERE flight_duration >= duration
 AND flight_id = 101;
+
+learnigns:
+----------
+Cross_join_then_filter

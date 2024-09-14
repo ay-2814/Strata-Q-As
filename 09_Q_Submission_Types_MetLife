@@ -116,3 +116,6 @@ WHERE EXISTS (
     AND l3.type = 'InSchool'
 );
 
+
+Learnings:
+EXISTS in SQL, apply and set in Python

@@ -28,3 +28,9 @@ def int_to_roman(num):
             num-= number
     return roman
 
+
+
+Learnings:
+----------
+Dictionary of roman numerals. 
+Looping

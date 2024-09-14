@@ -58,3 +58,6 @@ select * from facebook_complaints limit 5;
 SELECT complaint_id
 FROM facebook_complaints
 WHERE type = 1 AND processed = 'TRUE'
+
+Learnings:
+Boolean indexing and selecting columns in python using "."

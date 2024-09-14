@@ -10,3 +10,7 @@ def reverse_string(string):
     :rtype: str
     """
     return string[::-1]
+
+Learnings:
+----------
+String Reversal (one liner)

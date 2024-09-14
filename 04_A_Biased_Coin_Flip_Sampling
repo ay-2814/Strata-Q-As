@@ -16,3 +16,8 @@ def biased_coin_flip(input):
     if N > 0:
         results = random.choices(outcomes, probabilities, k=N)
     return results
+
+Learnings:
+----------
+random.choice(outcomes,probabilities, k=N)
+

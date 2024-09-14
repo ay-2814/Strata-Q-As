@@ -86,3 +86,10 @@ INTERSECT
 SELECT distinct friend_id
 FROM users INNER JOIN friends USING (user_id)
 WHERE user_name = 'Hans')
+
+Learnings:
+
+
+iloc and set intersection in python
+INTERSECT in SQL
+

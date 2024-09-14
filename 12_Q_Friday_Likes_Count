@@ -147,3 +147,8 @@ FROM  user_like_friendshp_joined
 GROUP BY date_liked
 ORDER BY date_liked;
 
+
+Learnings:
+friendships are bidirectional
+
+

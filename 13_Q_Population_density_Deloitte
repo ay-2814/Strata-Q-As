@@ -65,3 +65,7 @@ UNION ALL
 SELECT *
 FROM min_density
 
+
+Learnings:
+SELECT subclause in WHERE,
+python filtering based on min and ma values of a column

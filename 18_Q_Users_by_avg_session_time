@@ -102,3 +102,9 @@ GROUP BY 1;
 --  FROM user_by_day
 --  WHERE EXTRACT(EPOCH FROM (exit_timestamp - load_timestamp)) > 0
 
+
+Learnings:
+---------
+
+NICE_QUESTION,session length, taking min and max of exit and load activites for each user and each day.
+Time interval calcluations in SQL

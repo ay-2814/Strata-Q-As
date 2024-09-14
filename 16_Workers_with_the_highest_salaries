@@ -56,3 +56,8 @@ SELECT worker_title AS "highest_paid_title"
 FROM title t
 INNER JOIN highest_salary_id h 
 ON t.worker_ref_id = h.worker_id
+
+Learnings:
+-----------
+python: max, [[]] i.e. double brackets make series into dataframe. 
+SQL, subquery in WHERE clause
