@@ -1,0 +1,95 @@
+Problem Statement: 
+-------------------
+Following a recent advertising campaign, the marketing department wishes to classify its efforts based on the total number of units sold for each product.
+
+
+You have been tasked with calculating the total number of units sold for each product and categorizing ad performance based on the following criteria for items sold:
+
+
+Outstanding: 30+
+Satisfactory: 20 - 29
+Unsatisfactory: 10 - 19
+Poor: 1 - 9
+
+
+Your output should contain the product ID, total units sold in descending order, and its categorized ad performance.
+
+DataFrame: marketing_campaign
+Expected Output Type: pandas.DataFrame
+
+Sample Data:
+------------
+user_id	created_at		product_id	quantity	price
+10	2019-01-01 00:00:00	101		3		55
+10	2019-01-02 00:00:00	119		5		29
+10	2019-03-31 00:00:00	111		2		149
+11	2019-01-02 00:00:00	105		3		234
+11	2019-03-31 00:00:00	120		3		99
+
+
+Python Script: 
+---------------
+# Import your libraries
+import pandas as pd
+
+# Start writing code
+marketing_campaign.head()
+
+# Step 1: Group the df on product_id and sum the quantity
+grouped_df = marketing_campaign.groupby('product_id').quantity.sum().reset_index().sort_values(by = 'quantity', ascending = False)
+
+# Approach 1: Using pd.cut
+# grouped_df['category'] = pd.cut(x = grouped_df['quantity'], bins = [0, 9, 19, 29, float('inf')], labels = ['Outstanding', 'Satisfactory', 'Unsatisfactory', 'Poor'], right = True)
+
+
+# grouped_df
+
+# Approach 2: df.loc to create new columns
+
+grouped_df.loc[grouped_df['quantity'] >= 30, 'category'] = 'Outstanding'
+grouped_df.loc[grouped_df['quantity'].between(20, 29), 'category'] = 'Satisfactory'
+grouped_df.loc[grouped_df['quantity'].between(10, 19), 'category'] = 'Unsatisfactory'
+grouped_df.loc[grouped_df['quantity'] <=9, 'category'] = 'Poor'
+grouped_df
+
+---------------------
+
+Python Learnings: 
+------------------
+- How to use pd.cuts, format is pd.cuts(x = df['column'], bins = [x1, x2, x3, ...., float(inf)], lables = ['l1', 'l2', 'l3', ..., 'ln'], right = True/False)
+- df.loc[filter/condition, 'new_col_name'] = 'value_to_be_assigned'
+
+
+---------------------
+
+
+SQL Query:
+----------
+select * from marketing_campaign limit 5;
+
+
+with total_quantity AS (
+    SELECT product_id, sum(quantity) AS Total_quantity_sold
+    FROM marketing_campaign
+    GROUP BY 1
+    ORDER BY 2 DESC
+)
+SELECT *, CASE  
+            WHEN Total_quantity_sold >=30 THEN 'Outstanding'
+            WHEN Total_quantity_sold BETWEEN 20 AND 29 THEN 'Satisfactory'
+            WHEN Total_quantity_sold BETWEEN 10 AND 19 THEN 'Unsatisfactory'
+            WHEN Total_quantity_sold <=9 THEN 'Poor'
+        END AS Category
+    FROM total_quantity
+
+
+----------------------
+
+SQL Learnings:
+---------------
+- CASE WHEN FORMAT: It goes like CASE ....WHEN CONDITION1 THEN 'ASSIGNMENT1'
+					  WHEN CONDITION2 THEN 'ASSIGNMENT2'
+					  . 
+					  .
+				END AS 'Col_name'
+
