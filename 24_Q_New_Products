@@ -1,0 +1,101 @@
+Problem Statement:
+------------------
+You are given a table of product launches by company by year. Write a query to count the net difference between the number of products companies launched in 2020 with the number of products companies launched in the previous year. Output the name of the companies and a net difference of net products released for 2020 compared to the previous year.
+
+DataFrame: car_launches
+Expected Output Type: pandas.DataFrame
+
+
+Sample Data: 
+-----------
+year	company_name	product_name
+2019	Toyota		Avalon
+2019	Toyota		Camry
+2020	Toyota		Corolla
+2019	Honda		Accord
+2019	Honda		Passport
+
+
+Python Script:
+---------------
+# Import your libraries
+import pandas as pd
+
+# Start writing code
+car_launches.head()
+
+# Approach 1 - Self-thought
+# Getting a grouped df at Company and Year level
+# company_year_df = car_launches.groupby(['year', 'company_name']).count().reset_index().rename(columns = {'product_name': 'product_count'}).sort_values(by = ['year', 'product_count'], ascending = [False, False])
+
+# comp_2019_df = company_year_df[company_year_df['year'] == 2019]
+
+# comp_2020_df = company_year_df[company_year_df['year'] == 2020]
+
+# comp_df = pd.merge(comp_2020_df, comp_2019_df, on = 'company_name', suffixes = ['_2020', '_2019'])
+
+# comp_df['difference_2020_2019'] = comp_df['product_count_2020'] - comp_df['product_count_2019']
+
+# comp_df = comp_df[['company_name', 'difference_2020_2019']]
+
+## Approach 2: Using pivot tables (borrowed approach)
+
+car_df_pivot = car_launches.pivot_table(index = 'company_name', columns = 'year', values = 'product_name', aggfunc = 'count').reset_index().assign(net_new_prod = lambda x : x[2020] - x[2019])[['company_name', 'net_new_prod']]
+
+------------------------------
+
+Python Learnings:
+------------------
+- Using groupby on multiple columns. 
+- Making separate sub-datasets by filtering on a column like year and then merging the two dfs to get a combined df with individual cols of year
+- df.pivot_table(index = 'index_col', columns = 'column_col', value = 'col_with_value', aggfunc = 'count' or 'sum' etc.])
+- .assign(new_col_name = lambda x : x[col1] (operation) x[col2])
+
+
+---------------------
+
+SQL Query: 
+----------
+select * from car_launches limit 5;
+
+
+with comp_2019 AS (
+    SELECT company_name, COUNT(DISTINCT(product_name)) AS "Prod_Count"
+    FROM car_launches
+    WHERE year = 2019
+    GROUP BY 1
+    ),
+comp_2020 AS (
+    SELECT company_name, COUNT(DISTINCT(product_name)) AS "Prod_Count"
+    FROM car_launches
+    WHERE year = 2020
+    GROUP BY 1    
+    )
+SELECT comp_2020.company_name, (comp_2020."Prod_Count" - comp_2019."Prod_Count") AS "Net_new_Prod"
+FROM comp_2020 
+INNER JOIN comp_2019
+USING (company_name)
+
+
+-- Approach 2, without CTEs
+
+-- SELECT * 
+SELECT a.company_name, (a."Prod_Count" - b."Prod_Count") AS "Net_New_Prod"
+FROM (  
+        SELECT company_name, count(distinct(product_name)) AS "Prod_Count"
+        FROM car_launches
+        WHERE year = 2020
+        GROUP BY 1) a
+INNER JOIN 
+     ( SELECT company_name, count(distinct(product_name)) AS "Prod_Count"
+        FROM car_launches
+        WHERE year = 2019
+        GROUP BY 1)b
+ON a.company_name = b.company_name
+-----------------------
+
+SQL Learnings:
+----------------
+- Need to keep quoting the custom made column names in order to access them
+
+
