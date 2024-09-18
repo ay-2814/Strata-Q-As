@@ -1,0 +1,94 @@
+Problem Statement:
+------------------
+Given a list of projects and employees mapped to each project, calculate by the amount of project budget allocated to each employee . The output should include the project title and the project budget rounded to the closest integer. Order your list by projects with the highest budget per employee first.
+
+Tables: ms_projects, ms_emp_projects
+
+
+Sample Data: 
+-----------
+
+ms_projects
+
+d	title		budget
+1	Project1	29498
+2	Project2	32487
+3	Project3	43909
+4	Project4	15776
+5	Project5	36268
+
+
+ms_emp_projects:
+-----------------
+emp_id	project_id
+10592	1
+10593	2
+10594	3
+10595	4
+10596	5
+
+
+Python Script:
+--------------
+# Import your libraries
+import pandas as pd
+
+# Start writing code
+ms_projects.head()
+ms_emp_projects.head()
+
+# Grouping the ms_projects by projects to get the avg_budget
+ms_projects = ms_projects.groupby(['title', 'id']).agg({'budget':'mean'}).reset_index()
+
+# Merging the two dfs
+merged_df = pd.merge(ms_projects, ms_emp_projects, how = 'inner', left_on = 'id', right_on = 'project_id')
+
+merged_df = merged_df.groupby(['title', 'id']).agg({'budget':'mean', 'emp_id':'count'}).reset_index().rename(columns = {'emp_id':'emp_count'})
+
+merged_df['budget_emp_ratio'] = merged_df['budget']/merged_df['emp_count']
+
+merged_df['budget_emp_ratio'] = round(merged_df['budget_emp_ratio'])
+
+merged_df = merged_df[['title', 'budget_emp_ratio']].sort_values(by = 'budget_emp_ratio', ascending = False)
+
+-------------------
+Python Learnings:
+------------------
+- renaming columns
+- creating a new column by dividing 2 cols
+- rounding in python
+- sorting based on single column
+------------------
+
+
+SQL Query:
+----------
+select * from ms_projects limit 5;
+select * from ms_emp_projects limit 5;
+
+
+select count(*) from ms_projects;
+select count(distinct(emp_id)) from ms_emp_projects;
+
+with merged AS (
+    select id, title, budget, emp_id
+    FROM ms_projects proj 
+    INNER JOIN ms_emp_projects emp
+    ON proj.id = emp.project_id
+    )
+, emp_count AS (
+    SELECT id, title, AVG(budget) AS "budget", count(distinct(emp_id)) AS "emp_count"
+    FROM merged
+    GROUP BY 1,2
+    )
+--SELECT * from emp_count
+SELECT title, ROUND((budget/emp_count),0) AS "budget_emp_ratio"
+FROM emp_count
+ORDER by 2 DESC;
+-------------------
+
+SQL Learnings: 
+-------------
+- round in PostgreSQL
+
+
