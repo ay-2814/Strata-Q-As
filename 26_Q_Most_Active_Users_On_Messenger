@@ -1,0 +1,117 @@
+Problem Statement: 
+-------------------
+Meta/Facebook Messenger stores the number of messages between users in a table named 'fb_messages'. In this table 'user1' is the sender, 'user2' is the receiver, and 'msg_count' is the number of messages exchanged between them.
+Find the top 10 most active users on Meta/Facebook Messenger by counting their total number of messages sent and received. Your solution should output usernames and the count of the total messages they sent or received
+
+Table: fb_messages
+
+Sample Data: 
+-------------
+id	date		user1		user2		msg_count
+1	2020-08-02	kpena		scottmartin	2
+2	2020-08-02	misty19		srogers		2
+3	2020-08-02	jerome75	craig23		3
+4	2020-08-02	taylorhoward	johnmccann	8
+5	2020-08-02	wangdenise	sgoodman	2
+
+
+Python Script: 
+--------------
+# Import your libraries
+import pandas as pd
+
+# Start writing code
+fb_messages.head()
+
+# user_to_check = 'tanya26'
+
+# fb_messages[(fb_messages['user1']== user_to_check) | (fb_messages['user2']== user_to_check)]
+
+sent_count = fb_messages.groupby('user1').msg_count.sum().reset_index()
+received_count = fb_messages.groupby('user2').msg_count.sum().reset_index()
+
+# merging the two dfs
+merged = pd.merge(sent_count, received_count, how = 'outer', left_on = 'user1', right_on = 'user2', suffixes = ('_sent', '_received'))
+
+# Replace the NAs with 0 in the msg_count columns
+merged['msg_count_sent'] = merged.msg_count_sent.fillna(0)
+merged['msg_count_received'] = merged.msg_count_received.fillna(0)
+
+# Sum up the message counts
+merged['total'] = merged['msg_count_sent'] + merged['msg_count_received']
+
+merged['user_name'] = merged.apply(lambda x: x['user1'] if pd.notna(x['user1']) else x['user2'], axis = 1)
+
+merged
+
+# merged = merged[['user_name', 'total']].nlargest(10, 'total')
+
+## Trying the technique to drop columns
+merged = merged.drop(['user1','msg_count_sent', 'user2', 'msg_count_received'], axis = 1)
+merged = merged.nlargest(10, 'total')
+
+------------------------------
+Python Learnings: 
+-------------------
+- outer join
+- apply(lambda x : x['user1'] if pd.notna(x['user1']) else x['user2'], axis = 1)
+- df.nlargest(n, 'col_name')
+----------------------------
+
+
+SQL Query:
+-----------
+select * from fb_messages limit 5;
+
+
+-- CTE approach
+with sent_count AS (
+    SELECT user1, sum(msg_count) AS "sent_msg_count"
+    FROM fb_messages
+    GROUP BY 1
+    ), 
+rec_count AS (
+    SELECT user2, sum(msg_count) AS "rec_msg_count"
+    FROM fb_messages
+    GROUP BY 1
+    ),
+merged AS (
+    SELECT *, (COALESCE(sent_msg_count,0) + COALESCE(rec_msg_count,0)) AS "total_msg" from
+    sent_count s 
+    FULL OUTER JOIN
+    rec_count r 
+    ON
+    s.user1 = r.user2)
+SELECT COALESCE(user1, user2), "total_msg"
+FROM merged
+ORDER BY 2 DESC
+limit 10;
+
+
+-- subquery approach
+
+select * from fb_messages limit 5;
+
+SELECT user1, SUM("msg") AS "total_msg" 
+--rank() OVER (order by "total_msg" DESC) AS "user_rank"
+FROM
+(SELECT user1, SUM(msg_count) AS "msg"
+FROM fb_messages
+GROUP BY 1
+UNION ALL 
+SELECT user2, SUM(msg_count) AS "msg"
+FROM fb_messages
+GROUP BY 1
+ORDER BY user1) a
+GROUP BY 1
+ORDER BY 2 DESC
+limit 10;
+
+
+-----------------
+SQL Learnings: 
+--------------
+- COALESCE(x1, x2) : outputs the first non-null value
+- FULL OUTER JOIN
+
+
