@@ -1,0 +1,97 @@
+Problem Statement: 
+------------------
+Write a query that'll identify returning active users. A returning active user is a user that has made a second purchase within 7 days of any other of their purchases. Output a list of user_ids of these returning active users.
+
+DataFrame: amazon_transactions
+Expected Output Type: pandas.DataFrame
+
+Sample Data: 
+------------
+id	user_id	item	created_at		revenue
+1	109	milk	2020-03-03 00:00:00	123
+2	139	biscuit	2020-03-18 00:00:00	421
+3	120	milk	2020-03-18 00:00:00	176
+4	108	banana	2020-03-18 00:00:00	862
+5	130	milk	2020-03-28 00:00:00	333
+
+
+Python Script - Try 1 after looking at Solution :
+--------------------------------------------------
+# Import your libraries
+import pandas as pd
+
+# Start writing code
+amazon_transactions.head()
+
+# Return active user = user that has made a second purchase within 7 days of any other of their purchase. 
+
+# amazon_transactions.info()
+
+# Converting the created_at column to datetime 
+amazon_transactions['created_at'] = pd.to_datetime(amazon_transactions['created_at'])
+
+amazon_transactions = amazon_transactions.sort_values(by = ['user_id', 'created_at'])
+
+amazon_transactions['prev_value'] = amazon_transactions.groupby(['user_id'])['created_at'].shift()
+
+amazon_transactions['buy_gap'] = (amazon_transactions['created_at'] - amazon_transactions['prev_value']).dt.days
+
+return_users = amazon_transactions[amazon_transactions['buy_gap']<=7]['user_id'].unique()
+
+--------------------------------------------------------------------------------------------
+
+Try 2 - On my own: 
+-------------------
+# Import your libraries
+import pandas as pd
+
+# Start writing code
+amazon_transactions.head()
+
+# A returning active user is a user that has made a second purchase within 7 days of any other of their purchases
+
+# Convert the created_at column to datetime to be sure its a datetime column
+df = amazon_transactions
+
+df['created_at'] = pd.to_datetime(df['created_at'])
+
+df = amazon_transactions.sort_values(by = ['user_id','created_at'], ascending = [True, True])
+
+df['previous_day'] = df.groupby('user_id')['created_at'].shift()
+
+df['buy_gap'] = (df['created_at'] - df['previous_day']).dt.days
+
+# Filtering users with at least one instance of <=7 days buy_gap
+df = df[df['buy_gap']<=7]['user_id'].unique()
+
+----------------------------------------------------------------
+Python Learnings:
+-----------------
+- df.groupby('col_to_group').shift('col_to_shift') to get lag but only by one. To increase the lag interval, we can specify the periods paramenter in .shift()
+- (df['datetime1] - df['datetime2']).dt.days to get the difference in days
+- Its important to order by user AND date before performing the shift
+- Using df['user'].unique() to only get unique user_ids that satisfy the criteria
+
+SQL Query:
+----------
+
+select * from amazon_transactions limit 5;
+
+
+
+SELECT distinct(user_id) FROM 
+    (SELECT user_id, (created_at - prev_day) AS "buy_gap"
+     FROM 
+    (   SELECT user_id, created_at, 
+        LAG(created_at, 1) OVER(PARTITION BY user_id ORDER BY created_at) AS "prev_day"
+        FROM amazon_transactions) t ) p
+    WHERE buy_gap <=7
+
+----------------------
+
+SQL Learnigns: 
+-------------
+- LAG('col', amount)
+- need to give alias to table in subquery
+- can not create a column and also do a WHERE on it in the same sub-query
+- Remeber the order of execution: FROM - WHERE - GROUP BY - HAVING - SELECT - ORDER BY - LIMIT
