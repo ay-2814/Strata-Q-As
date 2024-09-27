@@ -1,0 +1,138 @@
+Problem Statement:
+------------------
+
+Write a Python function to find the maximum subarray sum in a given array of integers. The function should return a list containing the maximum sum, the start index, and the end index of the subarray.
+
+Constraints
+The input variable must be a list of integers.
+The function must return a list with three elements: the maximum sum (an integer), the start index (an integer), and the end index (an integer).
+The function should use an iterative approach and cannot use eval or lambda functions.
+
+
+Attempt 1 - Self try:
+-----------------------
+def max_subarray_sum(arr):
+    """ 
+    :type input: List[int]
+    :rtype: List[int] 
+    """
+    def sum_start_end(start, end, arr = arr):
+        sub_sum = 0
+        for i in range (start,end):
+            sub_sum += arr[i]
+        return sub_sum
+    
+    # sum1 = sum_start_end(arr, 0 , 1)
+    # print(sum1)
+    
+    # largest_sum = sorted(arr)[-1] # To store one of the largest possible values of sum, the last element of a sorted array
+    # print(largest_sum, arr[-1])
+    
+    largest_sum = sum_start_end(0,1)
+    
+    for i in range (0, len(arr)-2):
+        for j in range(i+1, len(arr)+1):
+            print("Values of i and j: ", i, j)
+            sub_sum = sum_start_end(i, j)
+            print("current sub_sum value is: ", sub_sum)
+            if sub_sum >= largest_sum:
+                largest_sum = sub_sum
+                start_index = i
+                end_index = j-1
+    print(largest_sum)
+    
+    ans_list = [largest_sum, start_index, end_index]
+    return ans_list
+            
+            
+            
+    
+    # sub_sum = 0
+    # for i in arr:
+    #     sub_sum += i
+    # print("sum of the whole list: ", sub_sum)
+    # new_sum = sub_sum
+    # for i in arr:
+    #     new_sum = sub_sum - i
+    #     if new_sum > sub_sum:
+    #         print("greater sum is: ", new_sum, " got by subtratcting ", i , "from", sub_sum)
+    #         start_index = arr.index(i)
+    #         print(start_index)
+    
+    # Take every element and add one element to it, take the largest sum from that
+    # Take every element, and add 2 elements to it, take the largest sum from that
+    # In this approach, there would be quite a lot of repitition. 
+    
+    # # What if you sort the array
+    # array_sort = sorted(arr)
+    # posi_ind = 0
+    # for i in array_sort: 
+    #     if i > 0:
+    #         posi_ind_og_arr = arr.index(i)
+    #         posi_ind_sort_arr = array_sort.index(i)
+    #         print("first positive number is: ", i, " at index: ", posi_ind_og_arr, "in the original array and at ",  posi_ind_sort_arr,"in the sorted array")
+    #         break
+    # # Slicing the array to only include those positive numbers.
+    # sorted_arr
+    
+    # return arr
+        
+    # Sorting does not work either because we need a sub_array from the original array
+    
+
+------------------------------------------------------------------------------------------
+
+This solution runs in an atrocious 0n^3!!
+
+-------------------------------------------
+
+Attempt 2: Kadene's algo, Strata Solution self attempted:
+-----------------------------------------------------------
+def max_subarray_sum(arr):
+    """ 
+    :type input: List[int]
+    :rtype: List[int] 
+    """
+    # Kadene's algorithm
+    
+    # Step 1: Initialize the local_sum and global_sum to the first element
+    local_sum = global_sum = arr[0]
+    
+    #Step 2: initialize the indices of start and end
+    start = end = flag = 0
+    
+    # Step 3: iterate through the loop
+    for i in range(1, len(arr)):
+        # this means that the max sub array should start from here
+        print("\ni = ", i)
+        print("arr[",i,"] = ",arr[i])
+        print("Current local_sum = ", local_sum)
+        if arr[i] > local_sum + arr[i]: 
+            print("Going into condition that arr[i] > local_sum + arr[i]")
+            
+            local_sum = arr[i]
+            print("New local_sum is: ", local_sum)
+            
+            flag = i 
+            print("New Flag value is: ", flag)
+        else:
+            local_sum += arr[i]
+            print("New local_sum is: ", local_sum)
+            
+        if local_sum > global_sum:
+            print("Going to condition that local_sum > global")
+            print("local_sum is: ", local_sum)
+            print("global_sum is: ", global_sum)
+            
+            global_sum = local_sum
+            print("new global_sum is: ", global_sum)
+            
+            start = flag
+            print("start value now is: ", start)
+            
+            end = i
+            print("end value now is: ", end)
+    
+    return global_sum, start, end
+        
+ 
