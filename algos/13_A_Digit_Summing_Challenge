@@ -1,0 +1,76 @@
+Problem Statement: 
+------------------
+Sum the digits of every number in a list.
+
+Constraints:
+-------------
+- The input variable numbers is a list of integers.
+- The integers in the list can be positive or negative.
+- The integers in the list can have multiple digits.
+- The length of the list can be any positive integer.
+- The integers in the list can be within the range of the integer data type.
+
+
+Sample input: 
+------------
+[12345, 67890, -12345, -67890]
+
+Output:
+-------
+Output: [15, 30, 15, 30]
+
+
+Solution in Python:
+---------------------
+
+# Attempt 1: Attempted initially on my own and then referred Strata Solution
+
+def sum_digits(numbers):
+    """ 
+    :type numbers: List[int]
+    :rtype: List[int]
+    """
+    sum_list = []
+    for num in numbers:
+        print("\nNumber being accessed: ", num)
+        num = abs(num)
+        dig_sum = 0
+        while num > 0:
+            print("Internal digit", num%10)
+            dig_sum += num%10
+            print("Sum as of now: ", dig_sum)
+            num = num//10
+            print("number now: ", num, "\n")
+        print("final sum of digits: ", dig_sum)
+        sum_list.append(dig_sum)
+    return sum_list
+
+------------------------------------------------
+
+# Attempt 2: Re-attempting completely on my own
+
+
+def sum_digits(numbers):
+    """ 
+    :type numbers: List[int]
+    :rtype: List[int]
+    """
+    result = []
+    for number in numbers:
+        number = abs(number)
+        # print(number)
+        sum_dig = 0
+        while number > 0:
+            dig = number%10
+            sum_dig += dig
+            number = number//10
+        result.append(sum_dig)
+        
+    return result
+        
+
+-------------------------------------------------
+
+Learnings:
+-----------
+- get abs of a number, abs(number)

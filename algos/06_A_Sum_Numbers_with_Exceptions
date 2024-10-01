@@ -1,0 +1,34 @@
+Problem Statement:
+-------------------
+Calculate the sum from 0 to a given number N, excluding numbers that are divisible by 3 and 7.
+
+Constraints:
+------------
+- The input variable N must be an integer.
+- N must be non-negative.
+- N can be any positive integer, including zero.
+
+
+
+Solution in Python: 
+-------------------
+def calculate_sum(N):
+    """ 
+    :type N: int
+    :rtype: int
+    """
+    sum_N = 0
+    for i in range(0, N+1):
+        if(i%3==0 or i%7==0):
+            continue
+        sum_N += i
+    return sum_N
+
+
+-------------------------
+
+Learnings:
+-----------
+- to use for loop in python, one of the ways is for i in range(n, m):
+- Did not separate the two logical conditions inside the If with brackets, solution still seems to work
+

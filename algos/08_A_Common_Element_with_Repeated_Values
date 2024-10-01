@@ -1,0 +1,83 @@
+Problem Statement:
+-------------------
+Find common elements in 2 given lists and return all aspects even if they are repeated.
+
+Constraints:
+--------------
+The input variables list1 and list2 should be of type List[int].
+The input lists can have any length.
+The elements in the input lists can be repeated.
+The elements in the input lists can be in any order.
+The input lists can contain both positive and negative integers.
+The input lists can contain zero as an element.
+The input lists can be empty.
+
+
+Solution in Python:
+--------------------
+
+# Attempt 1: After referring Strata
+
+def common_elements(input):
+    """
+    input : dict(input)
+    return : list of common values. 
+    """
+    
+    list1 = input["list1"]
+    list2 = input["list2"]
+    
+    common_list = []
+    
+    if list1 == [] and list2 == []:
+        return []
+    
+    for elem1 in list1:
+        if elem1 in list2:
+            common_list.append(elem1)
+        #    list2.pop(elem1) # pop works with index
+        #    list2.pop(list2.index(elem1))
+            list2.remove(elem1)
+    
+    return common_list
+    
+
+----------------------------
+
+# Attempt 2: 30th Sept, without reference
+
+def common_elements(input):
+    """
+    input : dict(input)
+    return : list of common values. 
+    """
+    # print(type(input)) # input is a dict
+    # print(input.values())
+    # print(input.keys()) # Output: dict_keys(['list1', 'list2'])
+    
+    list1 = input['list1']
+    list2 = input['list2']
+    
+    
+    # print("printing lengths of list for sanity check", len(list1), len(list2))
+    
+    list_common = []
+    
+    for l1 in list1: 
+        if l1 in list2:
+            # print("Common element is: ", l1)
+            list_common.append(l1)
+            list2.remove(l1)
+            # print("the common element list now is: ", list_common)
+    # print("Final state of the common element list is: ", list_common)
+    
+    return list_common
+
+------------------------------
+
+Learnings:
+----------
+- Append an element in the list with list.append(element)
+- Remove element from list with list.remove(element)
+- Had to remove the common element from list2 so that no double counting of the common element occurs. Note that the program says its okay to have repeated values BUT if what if list1 has -1 twice and list has -1 only once, the list of duplicated elements will contain two -1s but that should not be the case. So Acc to the question, repitition should occur in both the lists.
+- accessing the value of a dict using its keys using dict['key'] 

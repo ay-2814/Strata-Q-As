@@ -1,0 +1,56 @@
+Problem Statement: 
+------------------
+Given a number as an input, find the following smallest palindrome number. For simplicity, consider the upper limit of your search to be 1 million.
+
+Constraints:
+------------
+- The input variable n is an integer.
+- The value of n should be within the range of 0 to 1 million (inclusive).
+
+Solution in Python: 
+-------------------
+def next_palindrome(n):
+    """
+    :type n: int
+    :rtype: int
+    """
+    
+    if n > 1000000 : 
+        return 0
+    
+    # if the number of digits (n) are odd, take the first digit and make that the first and last digit, take the 2nd digit and make it the 2nd and 2nd last digit, do this for n//2, then take the middle digit and add +1 to it
+    # if the number of digits are even, take the first digit and make that the first and the last digit, take the 2nd digit and make it the 2nd and 2nd last digit..do this for n//2 - 1 places, and then take the n//2, add +1 to it and make that the n//2 and n//2 +1 digit.
+    
+    
+    # Calculate number of digits in the original number
+    # d = 0
+    # n1 = n
+    # while (n1 > 1):
+    #     d+=1
+    #     print(n1)
+    #     n1 = n1/10
+    
+    # if d%2==0:
+    #     for _ in range(d):
+    #         n2 = n1/
+    # else:
+        
+    
+    # return d
+    
+    # Strata solution
+    while True: 
+        n = n+1
+        if str(n) == str(n)[::-1]:
+            break
+    return n
+
+-------------------------------------------------------------------
+
+Learnings:
+-----------
+- The solution did not really require the mathematical approach of looking at digit counts and reversing them
+- The question asks for the NEXT palindrome
+- So we can just run a while True loop, keep adding 1 to the number, and check if the number and its reverse are same by converting the number to string and also reversing the string
+- while True: can be used needs to be used cautiously
+

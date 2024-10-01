@@ -1,0 +1,49 @@
+Problem Statement:
+-------------------
+Given a 2D array of user IDs, find the number of friends a user has. Note that users can have none or multiple friends.
+
+Constraints:
+-------------
+- The input variable user_ids is a 2D array of user IDs.
+- Each element in the user_ids array is a list of integers representing the user IDs.
+- The user IDs can be any positive or negative integer value.
+- The user_ids array can have any number of rows and columns.
+-The user IDs within each row can be in any order.
+- The user_ids array can contain duplicate user IDs.
+- The output variable is a dictionary (Dict[int, int]) where the keys are the user IDs and the values are the count of friends for each user.
+
+Sample input:
+-------------
+[[4, -3, 15], [15, 22, 4], [-3, 4, 22]]
+
+Expected Output: 
+-----------------
+{"3": 3, "7": 4, "8": 3}
+
+Solution in Python: 
+-------------------
+def count_friends(user_ids):
+    """
+    :type user_ids: List[List[int]]
+    :rtype: Dict[int, int]
+    """
+    friends_count = {}
+    
+    for l1 in user_ids:
+        for l2 in l1:
+            if l2 in friends_count:
+                friends_count[l2] += 1
+            else:
+                friends_count[l2] = 1
+    return friends_count
+
+
+-------------------------
+
+Learnings: 
+-----------
+- Given a 2-D matrix of user_ids, we can count the number of times a user_id appears to know how many friends they have, because remember, friendships are bidirectional. 
+- For each row, the different columns refer to the user_IDs who are the friends of the user_id, although the user whose friends they are is not uniquely identified. 
+
+
+

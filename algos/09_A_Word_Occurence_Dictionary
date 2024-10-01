@@ -1,0 +1,71 @@
+Problem Statement:
+-------------------
+Given a list of sentences, construct a dictionary with all words and the number of their occurrences.
+
+Constraints:
+-------------
+The input variable sentences is a list of strings.
+The strings in sentences can contain any characters, including letters, numbers, and special characters.
+The length of sentences can be any positive integer.
+The length of each string in sentences can be any positive integer.
+The words in each sentence are separated by spaces.
+The words can contain any characters, including letters, numbers, and special characters.
+The words are case-sensitive, meaning that "word" and "Word" would be considered as different words.
+The number of occurrences of each word in the sentences can be any non-negative integer.
+
+Solution in Python:
+--------------------
+# Attempt 1: Referenced from solution
+
+def count_words(sentences):
+    word_count = {}
+
+    for sentence in sentences:
+        # Split each sentence into different words on space
+        # print(sentence)
+        words = sentence.split()
+        
+        for word in words: 
+            # Check if the word exists in the dictionary
+            # If it does, update the counter
+            if word in word_count:
+                word_count[word] += 1
+                # If it does not, add it to the list
+            else:
+                word_count[word] = 1
+    return word_count
+                    
+
+---------------------------
+# Attempt 2: 30th Sept, self-attempted without reference
+
+def count_words(sentences):
+    word_count = {}
+    
+    print("type of sentences is: ", type(sentences)) # <class 'list'>
+    
+    for sentence in sentences:
+        # print(sentence)
+        print("type of sentence is: ", type(sentence))  # <class 'str'>
+        words = sentence.split() # can be used on str, not on lists
+        # print(words)
+        print("type of words is: ", type(words)) # <class 'list'>
+        for word in words:
+            if word in word_count:
+                word_count[word] += 1
+            else:
+                word_count[word] = 1
+    
+    return word_count
+---------------------------------------
+
+Learnings:
+----------
+- naming list of sentences as sentences
+- looping through the list to get one sentence and storing it in variable sentence
+- initial input is a list
+- when the list is looped through, the sentence is sentences is of type str
+- on str, .split() can be applied
+- .split() converts the str once again to a list, this time containing the words as a list
+- to check if a key exists in a dictionary, we can used if element in dict:
+

@@ -1,0 +1,92 @@
+Problem Statement:
+------------------
+Sort a given string alphabetically.
+
+Constraints:
+-------------
+- The input variable string must be a string.
+- There are no specific constraints on the length of the string
+
+Solution in Python:
+--------------------
+
+# Attempt 1, Referenced from Strata
+
+def sort_string(string):
+    """
+    :type string: str
+    :rtype: str
+    """
+    # Approach 1 (self try)
+    # # Check if the input variable is a string
+    # string = list(string)
+    # string.sort()
+    # sort_string = ""
+    # for elem in string:
+    #     sort_string = sort_string + elem
+    # return sort_string
+    
+
+# Approach 2: Strata approach
+
+# sorted(iterable, key=key, reverse=reverse)
+
+    # print(len(string))
+    # return len(string)
+    
+    sort_string = sorted(string)
+    # The sorted function returns a new list containing all items from the  iterable (in this case, the input string) in ascending order. Since
+    # strings are iterable, the function breaks down the string into a list of characters, sorts them alphabetically, and then the list of characters is ready to be joined back together.
+
+
+    print(sort_string)
+    return ''.join(sort_string)
+
+------------------------------------------------------------------------------------------------
+
+# Attempt 2, 30th Sept, without reference
+
+def sort_string(string):
+    """
+    :type string: str
+    :rtype: str
+    """
+    # print(string)
+    # print(type(string))
+    
+    # list(string)
+    # print(type(string))
+    
+    list_str = list(string) #The list() method per se is not an in-place operation. You can use it while assigning the output to another variable
+    # print(type(list_str))
+    
+    list_str.sort()
+    final = ''
+    final = final.join(list_str)
+    
+    # print(type(final)) # <class 'str'>
+    
+    return final
+    
+    
+-------------------------------------------------
+
+Learnings:
+----------
+- Initilizing a variable with '' makes it a string
+- string class has a method called .join()
+- Example: myTuple = ("John", "Peter", "Vicky")
+
+x = "#".join(myTuple)
+
+print(x)
+
+Output: John#Peter#Vicky
+
+The join() method takes all items in an iterable and joins them into one string.
+
+A string must be specified as the separator.
+
+Note: When using a dictionary as an iterable, the returned values are the keys, not the values.
+
+

@@ -1,0 +1,72 @@
+Problem Statement:
+-------------------
+Find the median of two sorted arrays.
+
+Constraints:
+------------
+- The input variables nums1 and nums2 are both lists of integers.
+- The lists nums1 and nums2 are sorted in ascending order.
+- The lengths of nums1 and nums2 can be different.
+- The lengths of nums1 and nums2 can be zero (empty lists).
+- The integers in nums1 and nums2 can be positive, negative, or zero.
+- The integers in nums1 and nums2 can be duplicates.
+
+Sample Input:
+--------------
+Input: {"nums1": [1, 12, 15, 26, 38], "nums2": [2, 13, 17, 30, 45]}
+Expected Output: 16
+
+
+Solution in Python:
+--------------------
+def find_median_sorted_arrays(input):
+    """ 
+    :type input: Dict[str, List[int]]
+    :rtype: float
+    """
+
+    nums1 = input["nums1"]
+    nums2 = input["nums2"]
+    
+    merged_list = nums1 + nums2 # Why does this give concatenated list and not an element wise addition of the two lists
+    merged_list.sort()
+    l = len(merged_list)
+    
+    print(l)
+    mid_l = l//2
+    if l%2==0:
+        median = (merged_list[mid_l-1] + merged_list[mid_l])/2
+    else:
+        median = merged_list[mid_l]
+    return median
+
+-------------------------------------------------------------------
+
+# Attempt 2, 30th Sept
+
+def find_median_sorted_arrays(input):
+    """ 
+    :type input: Dict[str, List[int]]
+    :rtype: float
+    """
+
+    nums1 = input["nums1"]
+    nums2 = input["nums2"]
+    
+    merged_list = nums1 + nums2
+    merged_list.sort()
+    print(merged_list)
+    
+    l = len(merged_list)
+    
+    if l%2==0 :
+        median = (merged_list[l//2 - 1] + merged_list[l//2])/2
+    else:
+        median = merged_list[l//2]
+    return median
+
+--------------------------------------------------------------------
+
+Learnings:
+----------
+- list1 + list2, gives a concatenated list

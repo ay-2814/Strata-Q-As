@@ -1,0 +1,163 @@
+Problem Statement:
+------------------
+Write a function to find the square root of all column values in a DataFrame.
+
+
+Note: The function should only compute the square root for non-negative numbers (i.e., values greater than or equal to 0). If any value in the DataFrame is negative, the function should return None for that particular value.
+
+
+Constraints:
+------------
+- The input variable df must be a pandas DataFrame.
+- The input variable column_name must be a string representing the name of a column in the DataFrame df.
+
+
+
+Solution in Python:
+--------------------
+import pandas as pd
+
+def find_square_root(input_dict):
+    """
+    :param input: Dict 
+    :return: pandas DataFrame
+    """
+
+    # input is a dictionary as mentioned in the param
+    # If we pass the dictionary as it is to the dataframe, we get the following
+    data = pd.DataFrame(input_dict)
+    # print("\n the columns in data is: ", data.columns) # the columns in data is:  Index(['df'], dtype='object')
+    # print(data) 
+#     df
+# A  [4, 16, 25, 36]
+# B    [1, 4, 9, 16]
+    # print(data.index)
+    # Output
+    # Index(['A', 'B'], dtype='object')
+
+
+    
+    # Now if we pass one of the keys in the dataframe
+    data1 = pd.DataFrame(input_dict['df'])
+    # print("\n the columns in data1 is: ", data1.columns) # the columns in data1 is:  Index(['A', 'B'], dtype='object')
+    # print(data1)
+    # Output
+#       A   B
+# 0   4   1
+# 1  16   4
+# 2  25   9
+# 3  36  16 
+    # print(data1.index)
+    # output
+    # RangeIndex(start=0, stop=4, step=1)
+    
+    # Just for experimentation, we are going to go in a level deeper in the dictionary
+    data2 = pd.DataFrame(input_dict['df']['A'])
+    # print("\n the columns in data2 is: ", data2.columns) # the columns in data2 is:  RangeIndex(start=0, stop=1, step=1)
+    # print(data2)
+    # Output
+#         0
+# 0   4
+# 1  16
+# 2  25
+# 3  36
+    # print(data2.index)
+    # Output
+    # RangeIndex(start=0, stop=4, step=1)
+    
+    
+    # # print dtypes of the dataframe
+    # print('dtype')
+    # print(data.info())
+    # # Filter out only numerical columns
+    # cols = data.select_dtypes(include=['number'])
+    # print("cols :", cols)
+    
+
+    # We now want to see the dtypes of the dataframes
+    # print("\nInfo on data :", data.info(), "\n")
+    # print("\nInfo on data1: ", data1.info(), "\n")
+    # print(data2.info())
+    
+    
+    # So now we know that data1 is the dataframe that we need to work with, 
+    # we now explore df.select_dtypes
+    # print("dtypes of data:\n", data.dtypes, "\n")
+    # print("dtypes of data1:\n", data1.dtypes, "\n")
+    
+    # Since we need to work on only the numeric columns, getting a subset of the numeric columns
+    data1 = data1.select_dtypes(include = ['number'])
+    
+    # iterating through the columns in data1 and applying the sqrt to each of the columns
+    for col in data1.columns:
+        data1[col] = data1[col].apply(lambda x: x ** 0.5 if x >= 0 else None)
+    
+    # Convert the DataFrame back to a dictionary to match the expected output
+    return data1.to_dict(orient='list')
+   
+
+
+---------------------------------------------------------------------------------------------------------
+
+# Attempt 2
+
+import pandas as pd
+import numpy as np
+
+def find_square_root(input_dict):
+    """
+    :param input: Dict 
+    :return: pandas DataFrame
+    """
+
+    # print(type(input_dict))
+    # print(input_dict.values())
+    # print(input_dict.keys())
+    
+    df = input_dict['df']
+    df = pd.DataFrame.from_dict(data = df, orient='columns')
+    # print(df)
+    print(type(df)) # <class 'pandas.core.frame.DataFrame'>
+    
+    # Step1: Apply the function to only numerical columns
+    # Step2: for each row in that column, check if the value is non-negative and then apply the sqrt else return None
+    
+    # df = df.select_dtypes(include = ['number'])
+    # df = df.select_dtypes(include = ['np.number']) # TypeError: data type 'np.number' not understood
+    df = df.select_dtypes(include = [np.number])
+    # ^ From the documentation of pandas.DataFrame.select_dtypes, 
+    # To select all numeric types, use np.number or 'number'
+    # To select strings you must use the object dtype, but note that this will return all object dtype columns
+    
+    # iterating through the columns in the df and applying sqrt to each of the non-negative values in the row
+    for col in df.columns:
+        df[col] = df[col].apply(lambda x: x ** 0.5 if x >= 0 else None)
+        
+    # return df.to_dict()   
+    return df.to_dict(orient = 'list')
+
+----------------------------------------------
+
+Learnings:
+----------
+- DataFrame.from_dict(data, orient='columns', dtype=None, columns=None)
+- pd.DataFrame.from_dict(data = df, orient = 'columns') 
+- orient{‘columns’, ‘index’, ‘tight’}, default ‘columns’
+The “orientation” of the data. If the keys of the passed dict should be the columns of the resulting DataFrame, pass ‘columns’ (default). 
+Otherwise if the keys should be rows, pass ‘index’. 
+If ‘tight’, assume a dict with keys [‘index’, ‘columns’, ‘data’, ‘index_names’, ‘column_names’].
+
+- columnslist, default None
+Column labels to use when orient='index'. Raises a ValueError if used with orient='columns' or orient='tight'.
+
+- df = df.select_dtypes(include = ['number'])
+OR 
+df = df.select_dtypes(include = [np.number])
+
+- # iterating through the columns in the df and applying sqrt to each of the non-negative values in the row
+    for col in df.columns:
+        df[col] = df[col].apply(lambda x: x ** 0.5 if x >= 0 else None)
+
+
+-   # return df.to_dict() # This does not generate the output in the desired format
+    return df.to_dict(orient = 'list')

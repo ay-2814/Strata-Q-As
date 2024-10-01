@@ -1,0 +1,31 @@
+Problem Statement:
+-------------------
+Write a function to find the median of a given list efficiently.
+
+Constraints:
+-----------
+The input variable lst is a list of integers.
+
+Solution in Python: 
+---------------------
+# Attempt 1
+def find_median(lst):
+    """ 
+    :type lst: List[int]
+    :rtype: float
+    """
+    lst.sort()
+    l = len(lst)
+    if l%2 == 0: 
+        median = (lst[(l//2)-1] + lst[(l//2)])/2
+    else:
+        median = lst[int(l/2)]
+    return median
+
+-------------------------
+
+Learnings:
+----------
+- sort() sorts the list in place
+- // is used for integer division, i.e. 9//2 = 4 (returns the integer part of the answer, does NOT round off)
+
