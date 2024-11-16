@@ -1,0 +1,41 @@
+Problem Statement:
+------------------
+Highest Total Miles
+
+
+Interview Question Date: July 2020
+
+Uber
+Medium
+ID 10169
+
+
+Data Engineer
+Data Scientist
+BI Analyst
+Data Analyst
+ML Engineer
+
+
+You’re given a table of Uber rides that contains the mileage and the purpose for the business expense.  You’re asked to find business purposes that generate the most miles driven for passengers that use Uber for their business transportation. Find the top 3 business purpose categories by total mileage.
+
+DataFrame: my_uber_drivesExpected Output Type: pandas.DataFrame
+
+Solution:
+---------
+# Import your libraries
+import pandas as pd
+
+# Start writing code
+my_uber_drives.head()
+
+# EDA
+my_uber_drives.category.unique()
+
+# find business purposes that generate the most miles driven for passengers that use Uber for their business transportation
+ 
+# Step 1: Filter for business 
+# Step 2:  groupby purpose, agg by sum of miles
+# Step 3: nlargest 3 by total mileage
+
+uber_df = my_uber_drives[my_uber_drives['category']=='Business'].groupby('purpose').agg({'miles':'sum'}).reset_index().nlargest(3, 'miles')
