@@ -1,0 +1,57 @@
+Problem Statement:
+-------------------
+High-Density Areas
+
+Identify the top 3 areas with the highest customer density. Customer density = (total number of unique customers in the area / area size).
+
+
+Your output should include the area name and its calculated customer density.
+
+DataFrames: transaction_records, stores
+
+transaction:
+------------
+
+  transaction_id  customer_id  transaction_amount transaction_date  store_id
+0               1            3                 189       2024-01-21         4
+1               2            7                 495       2024-01-29         1
+2               3           11                 207       2024-02-17         5
+3               4           11                 483       2024-01-08         5
+4               5            8                 290       2024-02-14         2
+
+stores:
+-------
+   store_id   store_location store_open_date area_name  area_size
+0         1      City Center      2018-09-11    Area A        121
+1         2          Suburbs      2019-08-10    Area B        238
+2         3         Downtown      2012-05-11    Area C         70
+3         4  Industrial Area      2013-07-19    Area D        152
+4         5             Mall      2013-02-05    Area E        171
+
+
+Solution:
+----------
+# Import your libraries
+import pandas as pd
+
+# Start writing code
+print(transaction_records.head())
+print(stores.head())
+
+# grouping stores, agg by count of unique customer count
+transaction_records = transaction_records.groupby('store_id').customer_id.size().reset_index(name = 'customer_count')
+
+# merge the transaction with stores 
+df_merged = pd.merge(transaction_records, stores, on = 'store_id')
+
+# Group by area_name, sum up customer_count, avg out area_size
+df_grouped = df_merged.groupby(['area_name']).agg({'area_size':'mean', 'customer_count':'sum'}).reset_index()
+
+df_grouped['density'] = df_grouped['customer_count']/df_grouped['area_size']
+
+# ranking
+df_grouped['rank'] = df_grouped['density'].rank(ascending = False)
+
+# Filtering
+
+df_grouped = df_grouped[df_grouped['rank'] <= 3][['area_name','density']]

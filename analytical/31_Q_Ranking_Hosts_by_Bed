@@ -1,0 +1,30 @@
+Problem Statement:
+------------------
+Rank each host based on the number of beds they have listed. The host with the most beds should be ranked 1 and the host with the least number of beds should be ranked last. Hosts that have the same number of beds should have the same rank but there should be no gaps between ranking values. A host can also own multiple properties.
+Output the host ID, number of beds, and rank from highest rank to lowest.
+
+DataFrame: airbnb_apartmentsExpected Output Type: pandas.DataFrame
+
+
+Solution:
+----------
+# Import your libraries
+import pandas as pd
+
+# Start writing code
+airbnb_apartments.head()
+
+# Ranking to be used
+
+# Grouping by host_id and summing n_beds
+host_beds = airbnb_apartments.groupby('host_id').n_beds.sum().reset_index(name = 'beds').sort_values(by = 'beds', ascending = False)
+
+# Ranking
+host_beds['rank'] = host_beds.beds.rank(method = 'dense', ascending = False)
+
+host_beds
+
+
+Learnings:
+-----------
+- df.col.rank(method = ['dense'] does not skip ranks

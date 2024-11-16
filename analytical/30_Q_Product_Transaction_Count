@@ -1,0 +1,29 @@
+Problem Statement:
+------------------
+Find the number of transactions that occurred for each product. Output the product name along with the corresponding number of transactions and order records by the product id in ascending order. You can ignore products without transactions.
+
+DataFrames: excel_sql_inventory_data, excel_sql_transaction_dataExpected Output Type: pandas.DataFrame
+
+
+Solution:
+----------
+
+# Import your libraries
+import pandas as pd
+
+# Start writing code
+excel_sql_inventory_data.head()
+excel_sql_transaction_data.head()
+
+# Group the transaction data by product_id and count the transactions
+df_grouped = excel_sql_transaction_data.groupby('product_id').size().reset_index(name = 'transaction_count')
+
+# inner join this with the inventory data
+df_merged = df_grouped.merge(excel_sql_inventory_data, how = 'inner', on = 'product_id')[['product_name','transaction_count']]
+
+
+Learnings:
+----------
+- .size() to count the number of unique counts in group by df
+
+

@@ -1,0 +1,71 @@
+Problem Statement:
+-------------------
+Market penetration is an important metric for understanding Spotify's performance and growth potential in different regions.
+You are part of the analytics team at Spotify and are tasked with calculating the active user penetration rate in specific countries.
+
+
+For this task, 'active_users' are defined based on the  following criterias:
+
+
+last_active_date: The user must have interacted with Spotify within the last 30 days.
+•    sessions: The user must have engaged with Spotify for at least 5 sessions.
+•    listening_hours: The user must have spent at least 10 hours listening on Spotify.
+
+
+Based on the condition above, calculate the active 'user_penetration_rate' by using the following formula.
+
+
+•    Active User Penetration Rate = (Number of Active Spotify Users in the Country / Total users in the Country)
+
+
+Total Population of the country is based on both active and non-active users.
+The output should contain 'country' and 'active_user_penetration_rate' rounded to 2 decimals.
+
+
+Let's assume the current_day is 2024-01-31.
+
+
+Solution:
+----------
+# Import your libraries
+import pandas as pd
+from datetime import datetime, timedelta
+import numpy as np
+
+# Start writing code
+penetration_analysis.head()
+
+current_date = pd.to_datetime('2024-01-31')
+
+start_date = (current_date - timedelta(days = 30))
+
+# Extracting the date from the datetiime64[ns] in df
+# penetration_analysis['date'] = penetration_analysis['last_active_date'].dt.date
+
+# Filtering for users who have interacted within last 30 days
+spotify_df = penetration_analysis[(penetration_analysis['last_active_date'] >= start_date) & (penetration_analysis['last_active_date'] <= current_date)]
+
+# Getting the users with more than 5 sessions and more than 10 hours listened
+spotify_df = spotify_df[(spotify_df['sessions'] >=5) & (spotify_df['listening_hours'] >= 10)]
+
+
+
+# Getting the total users in country
+country_grouped = penetration_analysis.groupby(['country']).user_id.size().reset_index(name = 'total_users')
+
+# Calculating the total_users per country of the filtered subset
+spotify_df_grouped = spotify_df.groupby(['country']).user_id.size().reset_index(name = 'total_active_users')
+
+# merging the country user with filtered data on country
+spotify_df_merged = pd.merge(spotify_df_grouped, country_grouped, on = ['country'])
+
+# Calculation of penetration analysis
+spotify_df_merged['AUPR'] = np.round(spotify_df_merged['total_active_users']/spotify_df_merged['total_users'], 2)
+
+spotify_df_merged[['country','AUPR']]
+
+
+
+Learnings:
+----------
+- & is used to join conditions in boolean indexing

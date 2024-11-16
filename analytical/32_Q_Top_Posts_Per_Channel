@@ -1,0 +1,54 @@
+Problem Statement: 
+------------------
+Identify the top 3 posts with the highest like counts for each channel. Assign a rank to each post based on its like count, allowing for gaps in ranking when posts have the same number of likes. For example, if two posts tie for 1st place, the next post should be ranked 3rd, not 2nd. Exclude any posts with zero likes.
+
+
+The output should display the channel name, post ID, post creation date, and the like count for each post.
+
+DataFrames: posts, channels
+
+post.head()
+   post_id  channel_id created_at  likes  shares  comments
+0      101           1 2024-08-16      0      10         7
+1      102           1 2024-08-07      0      18         6
+2      103           1 2024-07-24     11       3         7
+3      104           1 2024-09-13      3       1         7
+4      105           1 2024-09-07     38       0        11
+
+channel.head()
+   channel_id  channel_name  channel_type
+0           1      TechNews          news
+1           2    GameStream        gaming
+2           3    SocialBuzz  social_media
+3           4  DailyUpdates          news
+4           5      ProGamer        gaming
+
+Solutions:
+----------
+# Import your libraries
+import pandas as pd
+
+# Start writing code
+print(posts.head())
+print(channels.head())
+
+# Merge the dfs to get channel name
+df_merged = pd.merge(posts, channels[['channel_id','channel_name']], how = 'inner', on = 'channel_id')
+
+df_merged['like_rank'] = df_merged.groupby(['channel_id', 'channel_name'])['likes'].rank(method = 'min', ascending = False)
+
+df_merged
+
+df_merged['date'] = df_merged['created_at'].dt.date
+
+# Filtering out the rows with rank more 3
+df_merged = df_merged[df_merged['like_rank'] <=3]
+
+df_merged = df_merged[['channel_name', 'post_id', 'date', 'likes']]
+
+
+Learnings:
+----------
+- rank is also an aggreating function, eg. df.groupby('channel_id')['likes'].rank() is a groupby object
+- df can be filtered inside while being merged
+

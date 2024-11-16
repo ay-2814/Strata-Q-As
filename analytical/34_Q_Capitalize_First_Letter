@@ -1,0 +1,44 @@
+Problem Statement:
+------------------
+Convert the first letter of each word found in content_text to uppercase, while keeping the rest of the letters lowercase.
+
+
+Your output should include the original text in one column and the modified text in another column.
+
+DataFrame: user_content
+
+user_content:
+-------------
+content_id	customer_id	content_type	content_text
+1		2		comment		hello world! this is a TEST.
+2		8		comment		what a great day
+3		4		comment		WELCOME to the event.
+4		2		comment		e-commerce is booming.
+5		6		comment		Python is fun!!
+
+Solutions:
+----------
+
+# Approach 1, UDF:
+------------------
+# Import your libraries
+import pandas as pd
+
+# Start writing code
+user_content.head()
+
+def first_letter_Capital(x):
+    return " ".join([i[0].upper() + i[1:].lower() for i in x.split(" ")])
+    
+user_content["modified_text"] = user_content["content_text"].apply(first_letter_Capital)
+
+user_content[["modified_text", "content_text"]]
+
+
+# Approach 2, .title()
+-----------------------
+user_content['modified_text'] = user_content['content_text'].str.title()
+
+user_content[['content_text','modified_text']]
+
+
