@@ -1,0 +1,72 @@
+Problem Statement:
+-------------------
+
+Find unique values in a given list.
+
+Constraints
+The input variable must be a list of integers.
+There are no constraints on the length of the input list.
+The input list can contain both positive and negative integers.
+The input list can contain duplicate values.
+The order of the elements in the input list must be preserved in the output list.
+
+
+Solution:
+----------
+def non_duplicate(input):
+    """ 
+    :type input: List[int]
+    :rtype: List[int]
+    """
+    # print(input)
+    # Approach 1, self thought and very mid
+    # res = []
+    # for i in input:
+    #     if i in res:
+    #         continue
+    #     res.append(i)
+    
+    # return res
+    
+    # Strata recommended approach
+    # before trying that, trying a few components of it
+    seen = set()
+    seen_add = seen.add 
+    # This is a bit of an optimization trick. By assigning the add method of the
+    # seen set to a variable, seen_add, the code avoids the overhead of attribute
+    # access in the loop. This means that for each iteration, Python doesn't have
+    # to look up the add method anew
+    
+   #  for i in input:
+       #  print(seen_add(i))
+       #  seen_add(i)
+       #  print(seen)
+  return[x for x in input if not (x in seen or seen_add(x))]
+
+ Learnings:
+------------
+Short-Circuit Evaluation with or:
+
+Python evaluates the expression "x in seen or seen_add(x)" from left to right.
+The or operator stops as soon as it finds a truthy value (this is called short-circuiting). 
+
+First Check – x in seen:
+
+For each element x, it first checks if x is already in the set seen.
+If x is already in seen:
+The expression x in seen returns True.
+Due to short-circuiting, seen_add(x) is not executed.
+The whole expression becomes True, and then applying not gives False.
+→ Result: The duplicate x is skipped.
+
+Second Check – seen_add(x):
+
+If x is not in seen, the check x in seen returns False.
+Then Python evaluates seen_add(x).
+What does seen_add(x) do?
+It adds x to the seen set.
+It returns None (which is treated as a falsy value in Python).
+
+Now the expression becomes False or None, which results in None (falsy).
+Applying not to None gives True.
+→ Result: The new element x is included in the result.
