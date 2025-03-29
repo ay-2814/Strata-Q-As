@@ -1,0 +1,30 @@
+Problem Statement:
+------------------
+
+Word Count Challenge
+
+Count the number of words in a given sentence.
+
+Constraints
+The input variable sentence must be a string.
+
+
+Solution:
+----------
+def count_words(sentence):
+    """ 
+    :type sentence: str
+    :rtype: int 
+    """
+    word_list = (sentence.split()) # Split uses any whitespace (spaces, tabs, newlines) as a delimiter to split the string.
+    print(word_list)
+    return len(word_list)
+
+
+Learnings:
+----------
+- # Split uses any whitespace (spaces, tabs, newlines) as a delimiter to split the string.
+- if we run, for word in sentence:
+		print(word)
+this actually prints each letter(character) because in python, a string is an iterable of characters.
+i
