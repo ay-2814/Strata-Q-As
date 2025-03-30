@@ -1,0 +1,27 @@
+Problem Statement:
+------------------
+Users Activity Per Month Day
+
+Return a distribution of users activity per day of the month. By distribution we mean the number of posts per day of the month.
+
+DataFrame: facebook_posts
+Expected Output Type: pandas.DataFrame
+
+
+# Import your libraries
+import pandas as pd
+
+# Start writing code
+facebook_posts.head()
+
+print(facebook_posts.post_date.nunique())
+
+user_activity = facebook_posts.groupby(facebook_posts['post_date'].dt.day)['post_id'].count().reset_index()
+
+
+
+Learnings:
+----------
+1) date.dt.day
+
+
