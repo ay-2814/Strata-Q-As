@@ -1,0 +1,52 @@
+Problem Statement:
+------------------
+Find the maximum value, its key, and index from a dictionary. Assume all values are unique.
+
+Constraints
+The input variable dictionary must be of type dict.
+The dictionary must contain unique values.
+
+
+
+Solution:
+----------
+def find_max_value(dictionary):
+    """ 
+    :type dictionary: dict
+    :rtype: tuple
+    """
+    ## Approach 1, self thought, still needed help in syntax
+    # max_key, max_value = next(iter(dictionary.items()))
+    # ind_counter = 0
+    # for key, value in dictionary.items():
+    #     if value > max_value:
+    #         max_value = value
+    #         max_key = key
+    #         max_index = ind_counter
+    #     ind_counter += 1
+            
+    
+    # return (max_value,max_key,max_index)
+    
+    ## Approach 2, strata recommended
+    max_value = max(dictionary.values())
+    max_key = max(dictionary, key=dictionary.get)
+    max_index = list(dictionary.keys()).index(max_key)
+    
+    return (max_value, max_key, max_index)
+
+
+
+Learnings:
+-----------
+BIG Learnings here
+1. Iterating over a dictionary - for key, value in dictionary.items(): 
+2. Getting initial key and value of a dict: initial_key, initial_value = next(iter(dictionary.items())). Useful in other iterables too
+the iter() function creates an iterable from the output of dictionary.items(). The next() function retrieves next item from the iterator
+Since this is the first call to next on this iterator, it returns the initial value
+3. max_value in dictionary = max(dictionary.values())
+4. max_key in dictionary = max(dictioanry, key=dictioanry.get)
+In python, iterating over a dictioanry by default iterates over its keys. 
+the "key" parameter of the max function accepts a function that is used to extract a comparison key from each element. 
+Here, dictionary.get is provided as the key function. hence, for each iteration, the max value compares the dictionary.get(key) for all the keys and returns the key for the highest value
+
