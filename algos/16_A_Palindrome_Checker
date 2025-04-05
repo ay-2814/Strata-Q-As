@@ -21,6 +21,22 @@ def is_palindrome(s):
 
 --------------------------------
 
+Solution: 4th April 2025:
+--------------------------
+def is_palindrome(s):
+    """ 
+    :type s: str
+    :rtype: bool
+    """
+    ## Approach 1
+    
+    # print(s)
+    # s1 = ''.join(reversed(s))
+    # return(s1==s)
+    
+    ## Approach 2
+    return s == s[::-1] # Preferred cuz it is in CPython
+
 Learnings:
 -----------
 - string reversal using slicing/indexing
