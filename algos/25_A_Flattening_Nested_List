@@ -1,0 +1,37 @@
+Problem:
+---------
+Given a nested list, flatten it so that it becomes a 1-D list.
+
+Constraints
+The input variable nested_list must be a list.
+The elements of nested_list can be of any type, including integers, floats, strings, or other nested lists.
+The nested lists can have any level of nesting, including empty lists.
+The elements of the nested lists can be of any type, including integers, floats, strings, or other nested lists.
+
+
+
+Solution:
+---------
+def flatten_list(nested_list):
+    """ 
+    :type nested_list: List[Any]
+    :rtype: List[Any]
+    """
+    flattened_list = []
+   # recursive function
+    for item in nested_list:
+        if isinstance(item, list):
+           flattened_list.extend(flatten_list(item))
+        
+        else:
+            flattened_list.append(item)
+    
+    return flattened_list
+           
+
+Learnings:
+----------
+- Recursive functions can have instance check as a base check too
+- isinstnace(datatype, item) is the syntax for checking syntax
+
+
