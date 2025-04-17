@@ -1,0 +1,43 @@
+Problem Statement:
+------------------
+Find the key of the highest value in a given dictionary. If there is more than one record with the highest value, sort their keys in ascending order and return the first.
+
+Constraints
+The input variable dct must be a dictionary.
+
+Solution:
+---------
+def key_of_highest_value(dct):
+    # from collections import defaultdict
+    # """ 
+    # :type dct: dict
+    # :rtype: str
+    # """
+    # max_value = max(dct.values())
+    # print(f'max_value: {max_value}')
+    
+    # # Get the keys of all the values that are max
+    # res = defaultdict(list);
+    # for key, value in dct.items():
+    #     res[value].append(key)
+    
+    # max_value_keys_array = res[max_value]
+    
+    # print(max_value_keys_array)
+    # return sorted(max_value_keys_array)[0]
+    
+    # Approach 2: Strata Solution
+    
+    max_value = max(dct.values())
+    print(max_value)
+    max_keys = [key for key,value in dct.items() if value == max_value]
+    print(max_keys)
+    return min(max_keys)
+    
+
+Learnings:
+----------
+- max_value of dict can be got by max(dict.values())
+- max_keys using list comprehension is smart!
+- the other ways of getting all the keys for a value was using defaultdict(list). 
+- defaultdict is useful when multiple keys share the same value

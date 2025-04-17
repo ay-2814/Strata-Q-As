@@ -1,0 +1,38 @@
+Problem Statement:
+------------------
+
+Find the last time each bike was in use. Output both the bike number and the date-timestamp of the bike's last use (i.e., the date-time the bike was returned). Order the results by bikes that were most recently used.
+
+DataFrame: dc_bikeshare_q1_2012
+Expected Output Type: pandas.DataFrame
+
+Sample data:
+-------------
+duration	duration_seconds	start_time		start_station					start_terminal	end_time		end_station			end_terminal	bike_number	rider_type	id
+0h 10m 47sec.	647			2012-03-25 10:30:00	17th & Corcoran St NW				31214		2012-03-25 10:40:00	Calvert St & Woodley Pl NW	31106		W00576		Registered	326188
+0h 11m 45sec.	705			2012-03-28 18:59:00	Rosslyn Metro / Wilson Blvd & Ft Myer Dr	31015		2012-03-28 19:11:00	21st & M St NW			31212		W00011		Registered	345585
+0h 7m 45sec.	465			2012-03-12 22:30:00	3rd & H St NE					31616		2012-03-12 22:37:00	Florida Ave & R St NW		31503		W01215		Registered	251919
+0h 4m 27sec.	267			2012-03-12 20:11:00	14th & G St NW					31238		2012-03-12 20:15:00	14th & Rhode Island Ave NW	31203		W00455		Registered	251426
+0h 10m 2sec.	602			2012-02-03 09:06:00	Lamont & Mt Pleasant NW				31107		2012-02-03 09:16:00	17th & Rhode Island Ave NW	31239		W00300		Registered	105965
+
+
+
+Python solution:
+----------------
+# Import your libraries
+import pandas as pd
+
+# Start writing code
+dc_bikeshare_q1_2012.head()
+
+# df = dc_bikeshare_q1_2012.groupby('bike_number').agg({'start_time':'max'}).reset_index().sort_values(by = 'start_time', ascending = False)
+
+# Group by bike_number and agg by max of end_time, then order by end_time desc
+df = dc_bikeshare_q1_2012.groupby('bike_number').agg({'end_time':'max'}).reset_index().sort_values(by = 'end_time', ascending = False)
+
+
+
+SQL Query:
+----------
+
+
