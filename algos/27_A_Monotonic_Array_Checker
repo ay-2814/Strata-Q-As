@@ -1,0 +1,42 @@
+Problem Statement:
+------------------
+Determine if an array is monotonic. A monotonic array has values strictly increasing or decreasing, but not both.
+
+Constraints
+The input variable lst is a list of integers.
+The length of lst can be any non-negative integer.
+The values in lst can be positive, negative, or zero.
+The values in lst can be in any order.
+The values in lst can be repeated.
+The maximum value of lst is not specified.
+The minimum value of lst is not specified.
+
+Solution:
+---------
+def is_monotonic(lst):
+    """
+    :type lst: List[int]
+    :rtype: bool
+    """
+    # print(lst)
+    is_mono_decr = True
+    is_mono_incr = True
+    
+    for i in range(0, len(lst)-1):
+        if is_mono_decr:
+            if lst[i+1] < lst[i]:
+                is_mono_decr = False
+        if is_mono_incr: 
+            if lst[i+1] > lst[i]:
+                is_mono_incr = False
+        if not (is_mono_decr or is_mono_incr):
+            return False
+    
+    return is_mono_decr or is_mono_incr
+        
+            
+Learnings:
+----------
+- Can check the length of sequence as the very first thing to do. Cuz if list is only of length 0, 1 or 2, it will be monotonic
+- Could have exited of the loop earlier (I did not add the last if condition until after reading the solution)
+
