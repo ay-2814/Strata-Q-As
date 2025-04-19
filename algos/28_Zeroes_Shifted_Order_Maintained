@@ -1,0 +1,61 @@
+Problem Statement:
+------------------
+Shift all zeroes to the end of an array while maintaining the order of all items.
+
+Constraints
+The input variable arr is a list of integers.
+The length of arr can be any non-negative integer.
+The elements of arr can be any integer, positive or negative.
+There may be duplicate elements in arr.
+The order of the elements in arr should be maintained after shifting the zeroes to the end.
+
+Solution:
+----------
+def shift_zeroes(arr):
+    """ 
+    :type arr: List[int]
+    :rtype: List[int]
+    """
+    
+    # print(arr)
+    # res = []
+    # zero_counter = 0
+    
+    # for i in range(0, len(arr)):
+    #     if arr[i] ==  0:
+    #         zero_counter += 1
+    #     else:
+    #         res.append(arr[i])
+    
+    # for i in range(0, zero_counter):
+    #     res.append(0)
+    
+    # return res
+    
+    ## Approach 2: with same time complexity but no extra space, so O(1) space complexity
+    
+    # j = 0 # Writer pointer
+    
+    # for i in range(len(arr)):
+    #     if arr[i] != 0:
+    #         arr[j] = arr[i]
+    #         j += 1
+    
+    # for k in range(j, len(arr)):
+    #     arr[k] = 0
+        
+    # return arr
+    
+    
+    # Approach 3: List comprehensions
+    
+    nonzeroes = [x for x in arr if x!=0]
+    zeroes = [0] * (len(arr) - len(nonzeroes))
+    return nonzeroes + zeroes
+        
+
+
+Learnings:
+----------
+- List comprehensions leverage optimized C code in interpreter so much more efficient
+- for i in range(len(array)) is same as for i in range(0, len(arr))
