@@ -1,0 +1,53 @@
+Problem Statement:
+------------------
+For a given list of numbers, find n consecutive numbers whose sum equals a given value.
+
+Constraints
+The input variable numbers is a list of integers.
+The input variable target_sum is an integer.
+The input variable n is an integer.
+The length of the list numbers is greater than or equal to n.
+The integers in the list numbers can be positive, negative, or zero.
+
+
+Solution:
+----------
+def find_consecutive_sum(input):
+    """
+    :type numbers: List[int]
+    :type target_sum: int
+    :type n: int
+    :rtype: List[List[int]]
+    """
+    
+    numbers = input["numbers"]
+    target_sum = input["target_sum"]
+    n = input["n"]
+    # print(numbers, target_sum, n)
+    print(f"length of the array: {len(numbers)} ")
+    sum = 0
+    
+    j = 0 # for the n consecutive numbers
+    for i in range(0,len(numbers)-n):
+        print(f"this loop will run at max for {len(numbers)-n} times")
+        print(f"current value of i is: {i}")
+        sum = 0 # resetting sum
+        j = i
+        while j < (i+n):
+            print(f"value of j inside while loop: {j}")
+            sum += numbers[j]
+            j += 1
+        print(f"value of sum after this j loop: {sum}")
+        if sum==target_sum:
+            return [numbers[i:i+n]]
+    
+    return []
+        
+Learnings:
+-----------
+- Feels good to solve this on my own w/o any googling--although it took 50 minutes over 2 days!
+- print statements helped!!
+- Happpy I used list indexing towards the end
+- Should have thought about using list indexing before
+- That's just a more efficiebt method!
+        
