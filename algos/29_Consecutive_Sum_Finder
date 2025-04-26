@@ -12,6 +12,8 @@ The integers in the list numbers can be positive, negative, or zero.
 
 Solution:
 ----------
+	## Approach 1:
+
 def find_consecutive_sum(input):
     """
     :type numbers: List[int]
@@ -50,4 +52,19 @@ Learnings:
 - Happpy I used list indexing towards the end
 - Should have thought about using list indexing before
 - That's just a more efficiebt method!
+
+
+	## Approach 2: Will try to use list indexing better
+--------------------------------------------------------------
+    for i in range(len(numbers)-n+1):
+        res = numbers[i:i+n]
+        res_sum = sum(res)
+        if res_sum == target_sum:
+            return [res]
         
+    return []        
+
+Learnings:
+----------
+sum of lst is given by sum(lst)
+
