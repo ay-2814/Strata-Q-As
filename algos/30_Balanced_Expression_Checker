@@ -1,0 +1,62 @@
+Problem Statement:
+-------------------
+Check if an expression is balanced. An expression is considered flat if it has adequately closed brackets (Brackets, parenthesis, greater-than sign, less-than sign).
+
+Constraints
+The input variable expression is a string.
+The string expression may contain any combination of characters, including brackets (parentheses, square brackets, curly brackets, and angle brackets) and other characters.
+The brackets in the expression can be nested and can appear in any order.
+The expression may or may not have any brackets.
+The expression may have balanced or unbalanced brackets.
+The length of the expression can be any positive integer or zero.
+
+Solution:
+---------
+def is_balanced(expression):
+    """
+    :type expression: str
+    :rtype: bool
+    """
+    # print(expression)
+    
+    # Hashmap/Dictionary for all the elements
+    # res = {}
+    
+    # for c in expression:
+    #     # print(f"{c}\n")
+    #     if not(c.isalpha()):
+    #         if c in res:
+    #             res[c] += 1
+    #         else:
+    #             res[c] = 1
+    # print(res)
+    # Output of the code above: 
+    # {'[': 2, '<': 1, '(': 1, '{': 1, ')': 1, '}': 1, '>': 1, ']': 2}
+    # It does not give a way to measure the opposites.
+    
+    # Solution after reading the Strata solution:
+    
+    res = []
+    
+    opening_brackets = ['(', '{', '[', '<']
+    closing_brackets = [')', '}', ']', '>']
+    
+    for c in expression:
+        if not c.isalpha():
+            if c in opening_brackets:
+                res.append(c)
+            elif c in closing_brackets:
+                if not res:
+                    return False
+                opening_bracket = res.pop()
+                if opening_brackets.index(opening_bracket)!= closing_brackets.index(c):
+                    return False
+    return len(res) == 0
+    
+    
+            
+
+Learnings:
+-----------
+- index of a character from a list: lst.index(char)
+- To calc the expressions, we needed to have a list of the exhaustive expressions to check. This is done through the lists opening_brackets and closing_brackets. Note: the corresponding opening and clsoing brackets are at same index
