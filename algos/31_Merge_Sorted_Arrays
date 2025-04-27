@@ -1,0 +1,55 @@
+Problem Statement:
+------------------
+Combine two sorted arrays to form 1 sorted array.
+
+Constraints
+arr1 and arr2 are both lists of integers.
+The input arrays arr1 and arr2 are already sorted in ascending order.
+The lengths of arr1 and arr2 can be different.
+The elements in arr1 and arr2 can be positive, negative, or zero.
+The elements in arr1 and arr2 can be repeated.
+The maximum length of arr1 and arr2 is not specified.
+
+
+Solution:
+---------
+def merge_sorted_arrays(input):
+    """ 
+    :type input: Tuple[List[int], List[int]]
+    :rtype: List[int] 
+    """
+
+    arr1 = input[0]
+    arr2 = input[1]
+    
+    i = 0 # index of arr1
+    j = 0 # index of arr2
+    res = []
+    print(res)
+    
+    while i < len(arr1) and j < len(arr2):
+        print(f"Hello i = {i}, j = {j}")
+        if arr1[i] < arr2[j]:
+            res.append(arr1[i])
+            print(f"res updated with element from arr1, {res}")
+            i += 1
+        else :
+            res.append(arr2[j])
+            print(f"res updated with element from arr2, {res}")
+            j += 1
+    # updating if the remaining elements, if any
+    while i < len(arr1):
+        res.append(arr1[i])
+        i += 1
+    while j < len(arr2):
+        res.append(arr2[j])
+        j +=1
+        
+    return res
+
+Learnings:
+----------
+- Don't run infinite loops like in the while cases when updating remaining elements
+- Time complexity for this is O(n)
+- Loops not yet intuitive
+- Had to check son
