@@ -1,0 +1,51 @@
+Problem Statement:
+------------------
+Given an array and an integer N, create a histogram by dividing it into N bins.
+
+Constraints
+The input variable array is a list of integers.
+The input variable N is an integer representing the number of bins.
+The elements in the array can be positive, negative, or zero.
+The length of the array can be any positive integer.
+The value of N should be a positive integer greater than zero.
+The elements in the array can be repeated.
+The elements in the array can be in any order.
+The elements in the array can be within any range of integers.
+The array should not be empty.
+
+
+Solution:
+---------
+def histogram(input):
+    """ 
+    :type input: Dict[str, Union[List[int], int]]
+    :rtype: List[int]
+    """
+
+    array = input["array"]
+    N = input["N"]
+    print(array,N)
+    
+    max_value = max(array)
+    min_value = min(array)
+    
+    # print(max_value, min_value)
+    
+    bin_width = (max_value - min_value) / N
+    
+    # print(bin_width)
+    bins = [0] * N
+    
+    for num in array:
+        bin_index = int((num - min_value) // bin_width)
+        if bin_index == N:
+            bin_index -= 1
+         bins[bin_index] +=1
+    return bins
+   
+
+Learnings:
+----------
+- Histogram is a frequency plot
+- floor division done using //
+- floor divison of a int and float will stil give float
